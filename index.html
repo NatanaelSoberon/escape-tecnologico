@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Tecnológico · 6.º grado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1b3d; --bg2:#172a5c; --card:#ffffff; --ink:#1d2340; --muted:#6b7398;
+    --yellow:#ffd23f; --green:#2ec47a; --red:#ff5a5f; --blue:#3a86ff; --purple:#8e5cf7; --orange:#ff9f1c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;font-family:'Baloo 2',system-ui,sans-serif;color:var(--ink);
+    background:radial-gradient(circle at 20% 10%,#24418f 0,transparent 40%),radial-gradient(circle at 85% 90%,#5b2f9e 0,transparent 45%),var(--bg);}
+  button{font-family:inherit;cursor:pointer}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px}
+  header.hud{display:flex;gap:12px;align-items:center;justify-content:space-between;color:#fff;flex-wrap:wrap;margin-bottom:14px}
+  .hud .pill{background:rgba(255,255,255,.12);border-radius:999px;padding:6px 16px;font-size:20px;font-weight:700}
+  .letters{display:flex;gap:6px}
+  .letters span{width:38px;height:44px;border-radius:10px;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:24px;font-weight:800;color:#fff}
+  .letters span.got{background:var(--yellow);color:var(--ink);animation:pop .4s}
+  .card{background:var(--card);border-radius:24px;padding:26px 28px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+  h1{font-size:52px;line-height:1;margin:0 0 6px;color:#fff;text-align:center}
+  h2{font-size:34px;margin:0;line-height:1.1}
+  .tag{display:inline-block;background:var(--purple);color:#fff;border-radius:999px;padding:2px 14px;font-size:16px;font-weight:700;margin-bottom:6px}
+  .lead{font-size:21px;color:var(--muted);margin:6px 0 16px}
+  .big{font-size:24px;margin:6px 0 14px}
+  .btn{border:none;border-radius:16px;padding:12px 22px;font-size:22px;font-weight:800;color:#fff;background:var(--blue);box-shadow:0 5px 0 rgba(0,0,0,.25);transition:transform .08s}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .btn.green{background:var(--green)} .btn.red{background:var(--red)} .btn.gray{background:#8c93b3} .btn.orange{background:var(--orange)} .btn.yellow{background:var(--yellow);color:var(--ink)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .between{justify-content:space-between}
+  .hint{margin-top:14px;background:#fff6d6;border:2px dashed var(--orange);border-radius:14px;padding:10px 14px;font-size:19px;display:none}
+  .msg{min-height:34px;font-size:22px;font-weight:700;margin-top:10px}
+  .msg.ok{color:var(--green)} .msg.bad{color:var(--red)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  @keyframes pop{0%{transform:scale(.5)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+  /* inicio */
+  .intro{text-align:center;color:#fff;padding-top:30px}
+  .intro p{font-size:22px;max-width:700px;margin:10px auto 22px;opacity:.9}
+  .intro input{font-family:inherit;font-size:26px;padding:12px 18px;border-radius:16px;border:none;width:min(420px,90%);text-align:center;margin-bottom:16px}
+  .mapa{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:24px auto;max-width:800px}
+  .mapa div{background:rgba(255,255,255,.1);border-radius:14px;padding:8px 14px;font-size:18px}
+
+  /* binario */
+  .bulbs{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+  .bulb{width:120px;border:3px solid #d8dcef;border-radius:20px;background:#f2f4fb;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .bulb .ico{font-size:48px;filter:grayscale(1) opacity(.35);transition:.2s}
+  .bulb .val{font-size:30px;font-weight:800}
+  .bulb .bit{font-size:22px;color:var(--muted);font-weight:800}
+  .bulb.on{background:#fff4c2;border-color:var(--yellow);box-shadow:0 0 24px rgba(255,210,63,.7)}
+  .bulb.on .ico{filter:none}
+  .bulb.on .bit{color:var(--ink)}
+  .sum{text-align:center;font-size:26px}
+  .target{display:inline-block;background:var(--ink);color:var(--yellow);border-radius:12px;padding:0 14px;font-size:34px;font-weight:800}
+
+  /* robot */
+  .robotlay{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+  .grid{display:grid;grid-template-columns:repeat(6,62px);grid-template-rows:repeat(6,62px);gap:4px;background:#d8dcef;padding:4px;border-radius:14px}
+  .cell{background:#f4f6ff;border-radius:8px;display:grid;place-items:center;font-size:36px}
+  .cell.wall{background:#5a6285}
+  .cell.path{background:#dff7ea}
+  .prog{min-height:70px;background:#f2f4fb;border-radius:14px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .prog span{background:var(--blue);color:#fff;border-radius:10px;width:44px;height:44px;display:grid;place-items:center;font-size:26px;font-weight:800}
+  .prog span.run{background:var(--orange);transform:scale(1.15)}
+  .arrows{display:grid;grid-template-columns:repeat(3,70px);gap:6px}
+  .arrows .btn{padding:10px 0;font-size:30px}
+
+  /* secuencias */
+  .seq{font-size:44px;text-align:center;letter-spacing:4px;margin:16px 0;font-weight:800}
+  .opts{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .opts .btn{min-width:110px;font-size:32px;background:var(--purple)}
+  .dots{text-align:center;font-size:22px;margin-top:10px}
+
+  /* cesar */
+  .cipher{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+  .cipher span{width:46px;height:56px;border-radius:10px;display:grid;place-items:center;font-size:30px;font-weight:800}
+  .cipher.enc span{background:var(--ink);color:#fff}
+  .cipher.dec span{background:#eef0fa;color:var(--ink)}
+  .cipher.dec.win span{background:var(--green);color:#fff}
+  .strip{font-family:monospace;font-size:19px;overflow-x:auto;background:#f2f4fb;border-radius:12px;padding:8px 10px;margin:12px 0;white-space:nowrap}
+  .wheel{display:flex;gap:16px;align-items:center;justify-content:center;margin:10px 0}
+  .wheel .n{font-size:40px;font-weight:800;min-width:70px;text-align:center}
+
+  /* luces */
+  .lights{display:grid;grid-template-columns:repeat(3,110px);gap:12px;justify-content:center;margin:12px auto}
+  .light{width:110px;height:110px;border-radius:22px;border:none;background:#2b3358;font-size:46px;transition:.15s}
+  .light.on{background:var(--yellow);box-shadow:0 0 30px rgba(255,210,63,.8)}
+
+  /* hanoi */
+  .towers{display:flex;justify-content:space-around;align-items:flex-end;height:240px;margin:14px 0;gap:10px}
+  .tower{flex:1;height:100%;position:relative;display:flex;flex-direction:column-reverse;align-items:center;cursor:pointer;border-radius:16px;padding-bottom:12px}
+  .tower:hover{background:#f2f4fb}
+  .tower.sel{background:#fff4c2}
+  .tower::before{content:'';position:absolute;bottom:12px;width:14px;height:200px;background:#8c93b3;border-radius:8px;z-index:0}
+  .tower::after{content:'';position:absolute;bottom:0;width:90%;height:14px;background:#5a6285;border-radius:8px}
+  .disc{height:36px;border-radius:12px;z-index:1;margin-top:4px;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+  .disc.lift{transform:translateY(-20px)}
+  .tlabel{text-align:center;display:flex;justify-content:space-around;font-weight:800;color:var(--muted);font-size:20px}
+
+  /* overlay */
+  .overlay{position:fixed;inset:0;background:rgba(10,16,40,.75);display:none;place-items:center;z-index:50;padding:20px}
+  .overlay.show{display:grid}
+  .overlay .card{text-align:center;max-width:520px;animation:pop .35s}
+  .bigletter{font-size:110px;line-height:1;font-weight:800;color:var(--ink);background:var(--yellow);border-radius:26px;width:150px;height:160px;display:grid;place-items:center;margin:14px auto}
+  .final h1{font-size:60px}
+  .pwd{display:flex;gap:10px;justify-content:center;margin:20px 0}
+  .pwd span{width:70px;height:84px;background:var(--yellow);border-radius:16px;display:grid;place-items:center;font-size:52px;font-weight:800}
+  .confetti{position:fixed;top:-40px;font-size:30px;pointer-events:none;animation:fall linear forwards;z-index:60}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+  .foot{color:rgba(255,255,255,.55);text-align:center;font-size:15px;margin-top:18px}
+  @media(max-width:760px){.robotlay{grid-template-columns:1fr}.grid{grid-template-columns:repeat(6,48px);grid-template-rows:repeat(6,48px)}h1{font-size:38px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="overlay" id="ov"><div class="card" id="ovc"></div></div>
+
+<script>
+const LETTERS = 'GENIOS';
+const S = { team:'', level:0, start:0, hints:0, timer:null, got:[] };
+const $ = s => document.querySelector(s);
+const app = $('#app');
+
+/* ---------- sonido ---------- */
+let AC;
+function beep(f=660, d=.12, type='sine'){ try{
+  AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator(), g=AC.createGain(); o.type=type; o.frequency.value=f;
+  g.gain.setValueAtTime(.18,AC.currentTime); g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);
+  o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime+d);
+}catch(e){} }
+const win = ()=>{beep(523,.12);setTimeout(()=>beep(659,.12),110);setTimeout(()=>beep(784,.25),220)};
+const fail = ()=>beep(180,.25,'square');
+const click = ()=>beep(880,.05,'triangle');
+
+/* ---------- tiempo ---------- */
+function elapsed(){ return Math.floor((Date.now()-S.start)/1000) + S.hints*30; }
+function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+/* ---------- pantalla de inicio ---------- */
+function intro(){
+  app.innerHTML = `
+  <div class="intro">
+    <div style="font-size:70px">🔐🤖💡</div>
+    <h1>Escape Tecnológico</h1>
+    <p>La computadora central del colegio quedó bloqueada. Para liberarla, su equipo tiene que superar <b>6 desafíos de ingenio</b>. Cada desafío les da una letra de la <b>contraseña maestra</b>.</p>
+    <input id="team" maxlength="28" placeholder="Nombre del equipo" autocomplete="off"><br>
+    <button class="btn yellow" id="go">¡Empezar la misión! 🚀</button>
+    <div class="mapa">
+      <div>1 · 💡 Código binario</div><div>2 · 🤖 Robot programador</div><div>3 · 🔢 Secuencias</div>
+      <div>4 · 🕵️ Mensaje secreto</div><div>5 · 🔌 Apagón del servidor</div><div>6 · 🗼 Torre de discos</div>
+    </div>
+    <p style="font-size:17px;opacity:.7">Cada pista que pidan suma 30 segundos al tiempo final. ¡Piensen en equipo antes de tocar!</p>
+  </div>`;
+  const go = ()=>{ S.team = $('#team').value.trim() || 'Equipo misterioso'; S.start=Date.now(); S.hints=0; S.got=[]; S.level=0; beep(600); level(); };
+  $('#go').onclick = go;
+  $('#team').addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
+  $('#team').focus();
+}
+
+/* ---------- marco de cada nivel ---------- */
+const LEVELS = [
+  {t:'Código binario', ico:'💡', lead:'Las computadoras guardan los números con lamparitas prendidas (1) y apagadas (0). Cada lamparita vale un número. Prendan las justas para que la suma dé el número pedido.',
+   hint:'Empiecen por la lamparita más grande que <b>no se pase</b> del número. Después sigan con las más chicas con lo que falta. Ej.: 11 = 8 + 2 + 1.', fn:binario},
+  {t:'Robot programador', ico:'🤖', lead:'Armen un programa con flechas para que el robot llegue a la batería 🔋 sin chocar contra las paredes. Cuando estén seguros, apreten ▶ Ejecutar.',
+   hint:'El robot primero tiene que ir hacia la derecha por arriba y bajar por el pasillo del medio. Desde la fila del medio, crucen todo a la derecha y bajen por el costado.', fn:robot},
+  {t:'Secuencias', ico:'🔢', lead:'Descubran la regla que sigue cada secuencia y elijan qué viene después. Tienen que acertar las 4.',
+   hint:'Pregúntense: ¿se suma siempre lo mismo? ¿se multiplica? ¿se suman los dos anteriores? ¿son números multiplicados por sí mismos?', fn:secuencias},
+  {t:'Mensaje secreto', ico:'🕵️', lead:'Un espía escondió palabras corriendo cada letra algunos lugares en el abecedario (como hacía Julio César). Giren la rueda hasta que el mensaje tenga sentido.',
+   hint:'La primera palabra está corrida 3 lugares. Fíjense en la tira del abecedario: la letra de arriba es la secreta y la de abajo es la verdadera.', fn:cesar},
+  {t:'Apagón del servidor', ico:'🔌', lead:'El servidor se recalentó. Apaguen TODAS las luces. Ojo: al tocar una luz, también cambian las de arriba, abajo, izquierda y derecha.',
+   hint:'Tocar dos veces la misma luz deja todo como estaba. Prueben tocar las luces del medio de cada lado o el centro, y miren qué pasa.', fn:luces},
+  {t:'Torre de discos', ico:'🗼', lead:'Pasen todos los discos a la torre C. Se mueve un disco por vez (el de arriba) y nunca un disco grande puede quedar arriba de uno más chico.',
+   hint:'Con 3 discos se puede en 7 movimientos. Primer movimiento: el disco más chico va directo a la torre C.', fn:hanoi},
+];
+
+function level(){
+  const L = LEVELS[S.level];
+  app.innerHTML = `
+  <header class="hud">
+    <div class="pill">👥 ${esc(S.team)}</div>
+    <div class="letters">${[...LETTERS].map((c,i)=>`<span class="${S.got[i]?'got':''}">${S.got[i]?c:'?'}</span>`).join('')}</div>
+    <div class="pill">⏱️ <span id="clock">${fmt(elapsed())}</span></div>
+  </header>
+  <div class="card">
+    <div class="row between">
+      <div><span class="tag">Desafío ${S.level+1} de 6</span><h2>${L.ico} ${L.t}</h2></div>
+      <button class="btn orange" id="hintbtn">💡 Pista (+30 s)</button>
+    </div>
+    <p class="lead">${L.lead}</p>
+    <div id="game"></div>
+    <div class="hint" id="hint">${L.hint}</div>
+  </div>
+  <div class="foot">Docente: Shift + N salta el desafío</div>`;
+  clearInterval(S.timer);
+  S.timer = setInterval(()=>{ const c=$('#clock'); if(c) c.textContent=fmt(elapsed()); },1000);
+  let used=false;
+  $('#hintbtn').onclick = ()=>{ if(!used){ used=true; S.hints++; $('#hint').style.display='block'; $('#hintbtn').classList.add('gray'); } };
+  L.fn($('#game'), passed);
+}
+
+function passed(){
+  win();
+  S.got[S.level] = true;
+  const letter = LETTERS[S.level];
+  const last = S.level === LEVELS.length-1;
+  $('#ovc').innerHTML = `<h2>¡Desafío superado! 🎉</h2><p class="lead">Ganaron una letra de la contraseña:</p>
+    <div class="bigletter">${letter}</div>
+    <button class="btn green" id="next">${last?'Abrir la computadora 🔓':'Siguiente desafío ➜'}</button>`;
+  $('#ov').classList.add('show');
+  confetti(18);
+  $('#next').onclick = ()=>{ $('#ov').classList.remove('show'); if(last) final(); else { S.level++; level(); } };
+}
+
+function final(){
+  clearInterval(S.timer);
+  const t = elapsed();
+  app.innerHTML = `
+  <div class="intro final">
+    <div style="font-size:70px">🔓🏆</div>
+    <h1>¡Computadora liberada!</h1>
+    <div class="pwd">${[...LETTERS].map(c=>`<span>${c}</span>`).join('')}</div>
+    <p>La contraseña maestra es <b>GENIOS</b>… como el equipo <b>${esc(S.team)}</b>.</p>
+    <div class="card" style="max-width:460px;margin:0 auto 20px;color:var(--ink)">
+      <div style="font-size:22px">Tiempo final</div>
+      <div style="font-size:64px;font-weight:800;line-height:1">${fmt(t)}</div>
+      <div style="font-size:18px;color:var(--muted)">${S.hints} pista${S.hints===1?'':'s'} usada${S.hints===1?'':'s'} (${S.hints*30} s de penalización)</div>
+    </div>
+    <p style="font-size:20px">📸 ¡Llamen al profe para registrar su tiempo!</p>
+    <button class="btn yellow" onclick="intro()">Jugar otra vez</button>
+  </div>`;
+  win(); setTimeout(win,400);
+  confetti(80);
+}
+
+function confetti(n){
+  const em=['🎉','⭐','💡','🤖','🔋','✨','🟡','🟣'];
+  for(let i=0;i<n;i++){ const s=document.createElement('div'); s.className='confetti';
+    s.textContent=em[i%em.length]; s.style.left=Math.random()*100+'vw';
+    s.style.animationDuration=(2+Math.random()*2.5)+'s'; s.style.animationDelay=(Math.random()*.8)+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),5500); }
+}
+function esc(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function shake(el){ el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+
+/* ================= 1. BINARIO ================= */
+function binario(el, done){
+  const vals=[16,8,4,2,1], targets=[6,13,25];
+  let r=0, on=[0,0,0,0,0], locked=false;
+  el.innerHTML = `<p class="big" style="text-align:center">Formen el número <span class="target" id="tg"></span> <span style="color:var(--muted);font-size:20px">· ronda <span id="rd"></span> de 3</span></p>
+    <div class="bulbs">${vals.map((v,i)=>`<button class="bulb" data-i="${i}"><span class="ico">💡</span><span class="val">${v}</span><span class="bit">0</span></button>`).join('')}</div>
+    <p class="sum">Suma: <b id="sm">0</b> &nbsp;·&nbsp; En binario: <b id="bn">00000</b></p><div class="msg" id="m" style="text-align:center"></div>`;
+  const bulbs=[...el.querySelectorAll('.bulb')];
+  function upd(){
+    let sum=0; bulbs.forEach((b,i)=>{ b.classList.toggle('on',!!on[i]); b.querySelector('.bit').textContent=on[i]; if(on[i]) sum+=vals[i]; });
+    el.querySelector('#sm').textContent=sum; el.querySelector('#bn').textContent=on.join('');
+    el.querySelector('#tg').textContent=targets[r]; el.querySelector('#rd').textContent=r+1;
+    const m=el.querySelector('#m');
+    if(sum===targets[r]){ locked=true; m.className='msg ok'; m.textContent='¡Exacto! ✔'; beep(784,.15);
+      setTimeout(()=>{ r++; if(r===targets.length) return done(); on=[0,0,0,0,0]; locked=false; m.textContent=''; upd(); },900);
+    } else if(sum>targets[r]){ m.className='msg bad'; m.textContent='Uy, se pasaron. Apaguen alguna.'; }
+    else m.textContent='';
+  }
+  bulbs.forEach((b,i)=>b.onclick=()=>{ if(locked) return; on[i]=on[i]?0:1; click(); upd(); });
+  upd();
+}
+
+/* ================= 2. ROBOT ================= */
+function robot(el, done){
+  const map=[
+    'R..#..',
+    '##.#.#',
+    '......',
+    '.####.',
+    '...#B.',
+    '##....'];
+  const MAX=12;
+  let prog=[], running=false;
+  const D={'↑':[-1,0],'↓':[1,0],'←':[0,-1],'→':[0,1]};
+  el.innerHTML=`<div class="robotlay">
+    <div class="grid" id="g"></div>
+    <div>
+      <div style="font-size:20px"><b>Programa</b> <span style="color:var(--muted)">(máximo ${MAX} pasos)</span></div>
+      <div class="prog" id="p"></div>
+      <div class="row" style="align-items:flex-start;gap:20px">
+        <div class="arrows">
+          <span></span><button class="btn" data-d="↑">↑</button><span></span>
+          <button class="btn" data-d="←">←</button><button class="btn" data-d="↓">↓</button><button class="btn" data-d="→">→</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn green" id="run">▶ Ejecutar</button>
+          <button class="btn gray" id="undo">⌫ Borrar último</button>
+          <button class="btn red" id="clr">✖ Borrar todo</button>
+        </div>
+      </div>
+      <div class="msg" id="m"></div>
+    </div></div>`;
+  const g=el.querySelector('#g'), p=el.querySelector('#p'), m=el.querySelector('#m');
+  function draw(pos, trail=[]){
+    g.innerHTML='';
+    map.forEach((row,r)=>[...row].forEach((c,k)=>{
+      const d=document.createElement('div'); d.className='cell'+(c==='#'?' wall':'');
+      if(trail.some(t=>t[0]===r&&t[1]===k)) d.classList.add('path');
+      if(c==='B') d.textContent='🔋';
+      if(pos[0]===r&&pos[1]===k) d.textContent='🤖';
+      g.appendChild(d);
+    }));
+  }
+  function drawProg(active=-1){ p.innerHTML = prog.length? prog.map((c,i)=>`<span class="${i===active?'run':''}">${c}</span>`).join('') : '<span style="background:none;color:var(--muted);width:auto;font-size:18px">Toquen las flechas para armar el programa…</span>'; }
+  el.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{ if(running) return; if(prog.length>=MAX){ m.className='msg bad'; m.textContent='¡Llegaron al máximo de pasos!'; return; } prog.push(b.dataset.d); click(); m.textContent=''; drawProg(); });
+  el.querySelector('#undo').onclick=()=>{ if(!running){ prog.pop(); drawProg(); } };
+  el.querySelector('#clr').onclick=()=>{ if(!running){ prog=[]; drawProg(); draw([0,0]); m.textContent=''; } };
+  el.querySelector('#run').onclick=()=>{
+    if(running||!prog.length) return; running=true; m.textContent='';
+    let pos=[0,0], i=0, trail=[[0,0]];
+    const step=()=>{
+      if(i>=prog.length){ running=false; m.className='msg bad'; m.textContent='El programa terminó y el robot no llegó. ¡Revisen y prueben otra vez!'; fail(); return; }
+      const [dr,dc]=D[prog[i]], nr=pos[0]+dr, nc=pos[1]+dc;
+      drawProg(i);
+      if(nr<0||nr>5||nc<0||nc>5||map[nr][nc]==='#'){ running=false; m.className='msg bad'; m.textContent=`💥 ¡Chocó en el paso ${i+1}! Corrijan el programa.`; fail(); shake(g); setTimeout(()=>draw([0,0]),900); return; }
+      pos=[nr,nc]; trail.push(pos); draw(pos,trail); beep(500+i*30,.06,'triangle');
+      if(map[nr][nc]==='B'){ running=false; m.className='msg ok'; m.textContent='🔋 ¡Batería cargada!'; setTimeout(done,700); return; }
+      i++; setTimeout(step,420);
+    };
+    step();
+  };
+  draw([0,0]); drawProg();
+}
+
+/* ================= 3. SECUENCIAS ================= */
+function secuencias(el, done){
+  const Q=[
+    {s:'2 · 4 · 8 · 16 · ?', o:['18','24','32','20'], a:'32'},
+    {s:'🔴 🔵 🔵 🔴 🔵 🔵 🔴 ?', o:['🔴','🔵','🟢'], a:'🔵'},
+    {s:'1 · 1 · 2 · 3 · 5 · 8 · ?', o:['11','13','10','16'], a:'13'},
+    {s:'1 · 4 · 9 · 16 · ?', o:['20','25','24','32'], a:'25'},
+  ];
+  let i=0;
+  function show(){
+    const q=Q[i];
+    el.innerHTML=`<div class="seq" id="sq">${q.s}</div>
+      <div class="opts">${q.o.map(o=>`<button class="btn">${o}</button>`).join('')}</div>
+      <div class="dots">${Q.map((_,k)=>k<i?'✅':k===i?'🔵':'⚪').join(' ')}</div>
+      <div class="msg" id="m" style="text-align:center"></div>`;
+    el.querySelectorAll('.opts .btn').forEach(b=>b.onclick=()=>{
+      if(b.textContent===q.a){ b.classList.add('green'); b.style.background='var(--green)'; beep(784,.15); setTimeout(()=>{ i++; i===Q.length?done():show(); },600); }
+      else { fail(); b.style.background='var(--red)'; shake(el.querySelector('#sq')); const m=el.querySelector('#m'); m.className='msg bad'; m.textContent='Esa no es. ¡Busquen la regla!'; }
+    });
+  }
+  show();
+}
+
+/* ================= 4. CÉSAR ================= */
+function cesar(el, done){
+  const AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const R=[{w:'COMPUTADORA',k:3},{w:'TECLADO',k:5}];
+  let r=0, k=0, locked=false;
+  const enc=(w,k)=>[...w].map(c=>AB[(AB.indexOf(c)+k)%26]).join('');
+  const dec=(w,k)=>[...w].map(c=>AB[(AB.indexOf(c)-k+26)%26]).join('');
+  function show(){
+    const secret=enc(R[r].w,R[r].k), plain=dec(secret,k);
+    el.innerHTML=`<p class="big" style="text-align:center">Mensaje interceptado ${r+1} de 2:</p>
+      <div class="cipher enc">${[...secret].map(c=>`<span>${c}</span>`).join('')}</div>
+      <div class="wheel"><button class="btn" id="mn">−</button><div><div style="font-size:16px;color:var(--muted);text-align:center">corrimiento</div><div class="n">${k}</div></div><button class="btn" id="pl">+</button></div>
+      <div class="cipher dec ${plain===R[r].w?'win':''}">${[...plain].map(c=>`<span>${c}</span>`).join('')}</div>
+      <div class="strip">Secreta:&nbsp;&nbsp;${[...AB].map(c=>c).join(' ')}<br>Verdadera:${[...AB].map(c=>AB[(AB.indexOf(c)-k+26)%26]).join(' ')}</div>
+      <div class="msg ok" id="m" style="text-align:center"></div>`;
+    el.querySelector('#mn').onclick=()=>{ if(locked) return; k=(k+25)%26; click(); show(); };
+    el.querySelector('#pl').onclick=()=>{ if(locked) return; k=(k+1)%26; click(); show(); };
+    if(plain===R[r].w){ locked=true; el.querySelector('#m').textContent=`¡Descifrado! La palabra es ${R[r].w} ✔`; beep(784,.15);
+      setTimeout(()=>{ r++; if(r===R.length) return done(); k=0; locked=false; show(); },1400); }
+  }
+  show();
+}
+
+/* ================= 5. LUCES ================= */
+function luces(el, done){
+  let st, start, moves=0, locked=false;
+  const press=(a,i)=>{ const r=Math.floor(i/3), c=i%3; [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dr,dc])=>{ const rr=r+dr, cc=c+dc; if(rr>=0&&rr<3&&cc>=0&&cc<3) a[rr*3+cc]^=1; }); };
+  function newPuzzle(){
+    do{ st=Array(9).fill(0); const picks=new Set(); while(picks.size<3) picks.add(Math.floor(Math.random()*9)); picks.forEach(i=>press(st,i)); }while(st.every(x=>!x));
+    start=[...st]; moves=0;
+  }
+  function draw(){
+    el.innerHTML=`<div class="lights">${st.map((v,i)=>`<button class="light ${v?'on':''}" data-i="${i}">${v?'💡':''}</button>`).join('')}</div>
+      <p style="text-align:center;font-size:21px">Movimientos: <b>${moves}</b> · Luces prendidas: <b>${st.filter(x=>x).length}</b></p>
+      <div class="row" style="justify-content:center"><button class="btn gray" id="rs">↺ Volver a empezar</button><button class="btn purple" style="background:var(--purple)" id="nw">🎲 Otro tablero</button></div>
+      <div class="msg ok" id="m" style="text-align:center"></div>`;
+    el.querySelectorAll('.light').forEach(b=>b.onclick=()=>{ if(locked) return; press(st,+b.dataset.i); moves++; click(); draw(); });
+    el.querySelector('#rs').onclick=()=>{ if(locked) return; st=[...start]; moves=0; draw(); };
+    el.querySelector('#nw').onclick=()=>{ if(locked) return; newPuzzle(); draw(); };
+    if(st.every(x=>!x)){ locked=true; el.querySelector('#m').textContent='¡Servidor apagado y a salvo! ✔'; setTimeout(done,800); }
+  }
+  newPuzzle(); draw();
+}
+
+/* ================= 6. HANOI ================= */
+function hanoi(el, done){
+  const colors=['#ff5a5f','#ffd23f','#3a86ff'];
+  let T=[[3,2,1],[],[]], sel=null, moves=0, locked=false;
+  function draw(){
+    el.innerHTML=`<div class="towers">${T.map((t,i)=>`<div class="tower ${sel===i?'sel':''}" data-i="${i}">${t.map((d,k)=>`<div class="disc ${sel===i&&k===t.length-1?'lift':''}" style="width:${50+d*45}px;background:${colors[d-1]}"></div>`).join('')}</div>`).join('')}</div>
+      <div class="tlabel"><span>Torre A</span><span>Torre B</span><span>Torre C 🎯</span></div>
+      <p style="text-align:center;font-size:21px">Movimientos: <b>${moves}</b> <span style="color:var(--muted)">(se puede en 7)</span></p>
+      <div class="row" style="justify-content:center"><button class="btn gray" id="rs">↺ Volver a empezar</button></div>
+      <div class="msg" id="m" style="text-align:center"></div>`;
+    el.querySelectorAll('.tower').forEach(t=>t.onclick=()=>{
+      if(locked) return; const i=+t.dataset.i, m=el.querySelector('#m');
+      if(sel===null){ if(T[i].length){ sel=i; click(); draw(); } return; }
+      if(sel===i){ sel=null; draw(); return; }
+      const d=T[sel][T[sel].length-1], top=T[i][T[i].length-1];
+      if(top!==undefined && top<d){ fail(); sel=null; draw(); const mm=el.querySelector('#m'); mm.className='msg bad'; mm.textContent='¡No se puede poner un disco grande sobre uno chico!'; return; }
+      T[i].push(T[sel].pop()); sel=null; moves++; beep(440+moves*20,.08,'triangle'); draw();
+      if(T[2].length===3){ locked=true; const mm=el.querySelector('#m'); mm.className='msg ok'; mm.textContent= moves===7?'¡Perfecto! En la mínima cantidad de movimientos 🤯':`¡Lo lograron en ${moves} movimientos! ✔`; setTimeout(done,1000); }
+    });
+    el.querySelector('#rs').onclick=()=>{ if(locked) return; T=[[3,2,1],[],[]]; sel=null; moves=0; draw(); };
+  }
+  draw();
+}
+
+/* atajo docente */
+document.addEventListener('keydown', e=>{ if(e.shiftKey && e.key.toLowerCase()==='n' && S.start && !$('#ov').classList.contains('show') && app.querySelector('#game')) passed(); });
+
+intro();
+</script>
+</body>
+</html>
