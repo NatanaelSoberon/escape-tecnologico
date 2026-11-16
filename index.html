@@ -48,7 +48,7 @@
   .mapa div{background:rgba(255,255,255,.1);border-radius:14px;padding:8px 14px;font-size:18px}
 
   /* memotest */
-  .memo{display:grid;grid-template-columns:repeat(4,96px);gap:12px;justify-content:center;margin:6px auto 12px}
+  .memo{display:grid;grid-template-columns:repeat(5,96px);gap:12px;justify-content:center;margin:6px auto 12px}
   .mc{width:96px;height:96px;border:none;border-radius:18px;font-size:50px;background:var(--purple);position:relative;transition:background .2s}
   .mc span{visibility:hidden} .mc.flip span,.mc.done span{visibility:visible;display:inline-block;animation:pop .25s}
   .mc::after{content:'?';position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.55);font-size:44px;font-weight:800}
@@ -67,8 +67,34 @@
   .sq{border:1px solid #c9cde3;background:#fff;font-size:46px;display:grid;place-items:center;padding:0}
   .sq.given{background:#eef0fa;cursor:default}
   .sq.bad{background:#ffe1e2}
-  .sq.c1{border-right:4px solid var(--ink)} .sq.r1{border-bottom:4px solid var(--ink)}
-  .palette{display:flex;gap:10px;justify-content:center;margin-top:8px;font-size:18px;color:var(--muted)}
+  .sq.cr{border-right:4px solid var(--ink)} .sq.rb{border-bottom:4px solid var(--ink)}
+  .sq.sel{background:#fff4c2;box-shadow:0 0 0 4px var(--orange) inset}
+  .palette2{display:flex;gap:8px;flex-wrap:wrap}
+  .pbtn{width:58px;height:58px;border:3px solid #d8dcef;border-radius:14px;background:#f7f8fd;font-size:32px}
+  .pbtn:hover{border-color:var(--blue)} .pbtn:disabled{opacity:.4}
+  /* mastermind */
+  .mm{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+  .mmrows{display:flex;flex-direction:column;gap:6px;background:#f2f4fb;border-radius:16px;padding:10px;min-width:330px}
+  .mmrow{display:flex;align-items:center;gap:6px;font-size:28px}
+  .mmrow.cur{background:#fff4c2;border-radius:12px;padding:2px 4px}
+  .mmn{width:26px;font-size:16px;color:var(--muted);font-weight:800;text-align:right}
+  .peg{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#fff}
+  .peg.empty{border:2px dashed #c9cde3}
+  .fb{margin-left:10px;font-size:20px;letter-spacing:1px}
+  .mmside{max-width:330px}
+  .legend{font-size:17px;background:#f2f4fb;border-radius:12px;padding:8px 12px;margin-bottom:10px;line-height:1.4}
+  /* puente */
+  .bridge{display:grid;grid-template-columns:1fr 120px 1fr;gap:10px;align-items:stretch}
+  .bank{background:#e8f6e9;border-radius:18px;padding:10px;min-height:170px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;justify-content:center}
+  .bt{width:100%;text-align:center;font-weight:800;font-size:19px}
+  .river{background:#cfe6ff;border-radius:18px;display:grid;place-items:center;text-align:center;font-size:44px;line-height:1.1}
+  .river span{font-size:24px}
+  .per{border:3px solid #d8dcef;background:#fff;border-radius:16px;width:96px;padding:6px;display:flex;flex-direction:column;align-items:center}
+  .per span{font-size:40px;line-height:1.1} .per b{font-size:17px} .per small{font-size:15px;color:var(--muted)}
+  .per.sel{border-color:var(--orange);background:#fff4c2;transform:translateY(-4px)}
+  .per:disabled{opacity:.55;cursor:default}
+  .timebar{height:14px;background:#eef0fa;border-radius:8px;overflow:hidden;margin:14px 0 4px}
+  .timebar div{height:100%;transition:width .4s}
 
   /* fósforos */
   .sticks{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px auto;min-height:120px;align-items:flex-end}
@@ -105,7 +131,7 @@
   .confetti{position:fixed;top:-40px;font-size:30px;pointer-events:none;animation:fall linear forwards;z-index:60}
   @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
   .foot{color:rgba(255,255,255,.55);text-align:center;font-size:15px;margin-top:18px}
-  @media(max-width:760px){h1{font-size:38px}.memo{grid-template-columns:repeat(4,72px)}.mc{width:72px;height:72px;font-size:38px}}
+  @media(max-width:760px){h1{font-size:38px}.memo{grid-template-columns:repeat(5,64px)}.mc{width:64px;height:64px;font-size:34px}}
 </style>
 </head>
 <body>
@@ -113,7 +139,7 @@
 <div class="overlay" id="ov"><div class="card" id="ovc"></div></div>
 
 <script>
-const LETTERS = 'GENIOS';
+const LETTERS = 'GENIALES';
 const S = { team:'', level:0, start:0, hints:0, timer:null, got:[] };
 const $ = s => document.querySelector(s);
 const app = $('#app');
@@ -142,12 +168,12 @@ function intro(){
   <div class="intro">
     <div style="font-size:70px">🧠🎲🏆</div>
     <h1>Desafío de Genios</h1>
-    <p>Para ganar el título de <b>Genios de 6.º</b>, su equipo tiene que superar <b>6 desafíos</b> de memoria, lógica e ingenio. Cada desafío les da una letra de la <b>palabra secreta</b>.</p>
+    <p>Para ganar el título de <b>Genios de 6.º</b>, su equipo tiene que superar <b>8 desafíos</b> de memoria, lógica e ingenio. Cada desafío les da una letra de la <b>palabra secreta</b>.</p>
     <input id="team" maxlength="28" placeholder="Nombre del equipo" autocomplete="off"><br>
     <button class="btn yellow" id="go">¡Empezar el desafío! 🚀</button>
     <div class="mapa">
-      <div>1 · 🃏 Memotest</div><div>2 · 🔴 Simón dice</div><div>3 · 🍓 Sudoku de frutas</div>
-      <div>4 · 🔥 Fósforos</div><div>5 · 🧩 Rompecabezas</div><div>6 · 🗼 Torre de discos</div>
+      <div>1 · 🃏 Memotest</div><div>2 · 🔴 Simón dice</div><div>3 · 🔐 Código secreto</div><div>4 · 🍓 Sudoku de frutas</div>
+      <div>5 · 🔥 Fósforos</div><div>6 · 🔦 El puente y la linterna</div><div>7 · 🧩 Rompecabezas</div><div>8 · 🗼 Torre de discos</div>
     </div>
     <p style="font-size:17px;opacity:.7">Cada pista que pidan suma 30 segundos al tiempo final. ¡Piensen en equipo antes de tocar!</p>
   </div>`;
@@ -159,18 +185,22 @@ function intro(){
 
 /* ---------- niveles ---------- */
 const LEVELS = [
-  {t:'Memotest', ico:'🃏', lead:'Den vuelta dos cartas por vez y encuentren las 8 parejas. ¡Usen la memoria de todo el equipo!',
-   hint:'Repártanse el tablero: cada integrante se encarga de recordar una parte (arriba, abajo, los costados). Antes de tocar, digan en voz alta dónde creen que está la pareja.', fn:memo},
-  {t:'Simón dice', ico:'🔴', lead:'Miren la secuencia de colores y repítanla en el mismo orden. Cada ronda se agrega un color más. ¡Lleguen a 6 colores!',
-   hint:'Digan los colores en voz alta mientras se encienden ("rojo, azul, azul…") y repitan la lista entre todos antes de tocar.', fn:simon},
-  {t:'Sudoku de frutas', ico:'🍓', lead:'Completen el tablero: en cada fila, en cada columna y en cada cuadrado de 2×2 tiene que haber las 4 frutas, sin repetir. Toquen un casillero vacío para cambiar la fruta.',
-   hint:'Busquen una fila, columna o cuadrado al que le falte UNA sola fruta: esa es fácil. Si una fruta aparece en rojo es porque está repetida.', fn:sudoku},
-  {t:'Fósforos', ico:'🔥', lead:'Hay 15 fósforos. Por turno, ustedes y la compu sacan 1, 2 o 3. El que se lleva el ÚLTIMO fósforo PIERDE. Ustedes empiezan. ¡Gánenle a la compu!',
-   hint:'Truco de genios: traten de dejarle a la compu 13, después 9, después 5 y al final 1 fósforo. Si la compu saca algunos, ustedes sacan lo que falte para completar 4 entre los dos.', fn:fosforos},
+  {t:'Memotest', ico:'🃏', lead:'Den vuelta dos cartas por vez y encuentren las 10 parejas. ¡Usen la memoria de todo el equipo!',
+   hint:'Repártanse el tablero: cada integrante se encarga de recordar una parte. Antes de tocar, digan en voz alta dónde creen que está la pareja.', fn:memo},
+  {t:'Simón dice', ico:'🔴', lead:'Miren la secuencia de colores y repítanla en el mismo orden. Cada ronda se agrega un color y va más rápido. ¡Lleguen a 8 colores!',
+   hint:'Digan los colores en voz alta mientras se encienden y repártanse la secuencia: uno recuerda los primeros 4 y otro los últimos.', fn:simon},
+  {t:'Código secreto', ico:'🔐', lead:'La compu escondió un código de 4 colores distintos (no se repiten). Prueben combinaciones y usen las pistas para descubrirlo en 10 intentos o menos.',
+   hint:'Primero averigüen QUÉ colores están (por ejemplo, probando 🔴🟠🟡🟢 y después 🔵🟣…). Recién después muévanlos de lugar usando los ✅.', fn:mastermind},
+  {t:'Sudoku de frutas', ico:'🍓', lead:'En cada fila, en cada columna y en cada cuadrado tiene que estar cada fruta una sola vez. Toquen un casillero y elijan la fruta abajo. ¡El segundo tablero es de 6×6!',
+   hint:'Busquen la fila, columna o cuadrado al que le falte UNA sola fruta. En el 6×6, los cuadrados son de 2 filas por 3 columnas.', fn:sudoku},
+  {t:'Fósforos', ico:'🔥', lead:'Hay 20 fósforos. Por turno, ustedes y la compu sacan 1, 2 o 3. El que se lleva el ÚLTIMO fósforo PIERDE. Ustedes empiezan. Ojo: ¡esta compu juega bastante bien!',
+   hint:'Truco de genios: traten de dejarle siempre a la compu 17, 13, 9, 5 y al final 1 fósforo. Cuando la compu saca algunos, ustedes sacan lo que falte para completar 4.', fn:fosforos},
+  {t:'El puente y la linterna', ico:'🔦', lead:'Es de noche y 4 personas tienen que cruzar un puente. Cruzan como máximo 2 por vez y siempre con la linterna (alguien la tiene que traer de vuelta). Si cruzan juntos, van al paso del más lento. ¡La pila dura solo 15 minutos!',
+   hint:'El secreto: los dos más lentos (Papá y la Abuela) tienen que cruzar JUNTOS, y la linterna la tienen que traer de vuelta siempre los más rápidos.', fn:puente},
   {t:'Rompecabezas deslizante', ico:'🧩', lead:'Ordenen los números del 1 al 8 deslizando las fichas hacia el lugar vacío. Toquen una ficha que esté al lado del hueco para moverla.',
-   hint:'Ordenen primero la fila de arriba (1, 2, 3) y no la toquen más. Después armen el resto. Las fichas que ya están en su lugar se marcan en verde.', fn:deslizante},
-  {t:'Torre de discos', ico:'🗼', lead:'Pasen todos los discos a la torre C. Se mueve un disco por vez (el de arriba) y nunca un disco grande puede quedar arriba de uno más chico.',
-   hint:'Con 3 discos se puede en 7 movimientos. Primer movimiento: el disco más chico va directo a la torre C.', fn:hanoi},
+   hint:'Ordenen primero la fila de arriba (1, 2, 3) y no la toquen más. Después pongan el 4 y el 7 en la columna izquierda, y al final giren el resto.', fn:deslizante},
+  {t:'Torre de discos', ico:'🗼', lead:'Pasen los 4 discos a la torre C. Se mueve un disco por vez (el de arriba) y nunca un disco grande puede quedar arriba de uno más chico.',
+   hint:'Con 4 discos se puede en 15 movimientos. Primer movimiento: el disco más chico va a la torre B (no a la C). El disco chico se mueve siempre en el mismo sentido: A→B→C→A…', fn:hanoi},
 ];
 
 function level(){
@@ -183,7 +213,7 @@ function level(){
   </header>
   <div class="card">
     <div class="row between">
-      <div><span class="tag">Desafío ${S.level+1} de 6</span><h2>${L.ico} ${L.t}</h2></div>
+      <div><span class="tag">Desafío ${S.level+1} de ${LEVELS.length}</span><h2>${L.ico} ${L.t}</h2></div>
       <button class="btn orange" id="hintbtn">💡 Pista (+30 s)</button>
     </div>
     <p class="lead">${L.lead}</p>
@@ -222,7 +252,7 @@ function final(){
     <div style="font-size:70px">🏆🧠</div>
     <h1>¡Son unos genios!</h1>
     <div class="pwd">${[...LETTERS].map(c=>`<span>${c}</span>`).join('')}</div>
-    <p>El equipo <b>${esc(S.team)}</b> superó los 6 desafíos.</p>
+    <p>El equipo <b>${esc(S.team)}</b> superó los 8 desafíos.</p>
     <div class="card" style="max-width:460px;margin:0 auto 20px;color:var(--ink)">
       <div style="font-size:22px">Tiempo final</div>
       <div style="font-size:64px;font-weight:800;line-height:1">${fmt(t)}</div>
@@ -247,11 +277,11 @@ function shake(el){ el.classList.remove('shake'); void el.offsetWidth; el.classL
 
 /* ================= 1. MEMOTEST ================= */
 function memo(el, done){
-  const icons=['🚀','🦊','🎸','🍕','⚽','🌈','🐙','🦖'];
+  const icons=['🚀','🦊','🎸','🍕','⚽','🌈','🐙','🦖','🦉','🍩'];
   const deck=shuffle([...icons,...icons]);
   let open=[], found=0, tries=0, lock=false;
   el.innerHTML=`<div class="memo">${deck.map((c,i)=>`<button class="mc" data-i="${i}"><span>${c}</span></button>`).join('')}</div>
-    <p class="center">Intentos: <b id="tr">0</b> · Parejas encontradas: <b id="pf">0</b> de 8</p>`;
+    <p class="center">Intentos: <b id="tr">0</b> · Parejas encontradas: <b id="pf">0</b> de ${icons.length}</p>`;
   const cards=[...el.querySelectorAll('.mc')];
   cards.forEach((c,i)=>c.onclick=()=>{
     if(lock||c.classList.contains('flip')||c.classList.contains('done')) return;
@@ -265,32 +295,33 @@ function memo(el, done){
       if(found===icons.length) setTimeout(done,700);
     } else {
       lock=true;
-      setTimeout(()=>{ cards[a].classList.remove('flip'); cards[b].classList.remove('flip'); lock=false; },950);
+      setTimeout(()=>{ cards[a].classList.remove('flip'); cards[b].classList.remove('flip'); lock=false; },800);
     }
   });
 }
 
 /* ================= 2. SIMÓN DICE ================= */
 function simon(el, done, tk){
-  const C=[{c:'#ff5a5f',f:330,n:'rojo'},{c:'#3a86ff',f:392,n:'azul'},{c:'#2ec47a',f:262,n:'verde'},{c:'#ffd23f',f:523,n:'amarillo'}];
-  const GOAL=6;
-  let seq=[Math.floor(Math.random()*4), Math.floor(Math.random()*4)], pos=0, busy=true;
+  const C=[{c:'#ff5a5f',f:330},{c:'#3a86ff',f:392},{c:'#2ec47a',f:262},{c:'#ffd23f',f:523}];
+  const GOAL=8;
+  let seq=[0,0,0].map(()=>Math.floor(Math.random()*4)), pos=0, busy=true;
   el.innerHTML=`<div class="simon">${C.map((p,i)=>`<button class="pad" data-i="${i}" style="background:${p.c};color:${p.c}" disabled></button>`).join('')}</div>
-    <p class="center">Colores en la secuencia: <b id="ln">2</b> de ${GOAL}</p>
+    <p class="center">Colores en la secuencia: <b id="ln">${seq.length}</b> de ${GOAL} <span style="color:var(--muted)">(¡cada vez más rápido!)</span></p>
     <div class="row" style="justify-content:center"><button class="btn green" id="play">▶ Mirar la secuencia</button></div>
     <div class="msg" id="m"></div>`;
   const pads=[...el.querySelectorAll('.pad')], m=el.querySelector('#m'), play=el.querySelector('#play');
   const setPads=on=>pads.forEach(p=>p.disabled=!on);
-  async function flash(i,ms=480){ pads[i].classList.add('lit'); beep(C[i].f,ms/1000*.9); await sleep(ms); pads[i].classList.remove('lit'); }
+  async function flash(i,ms){ pads[i].classList.add('lit'); beep(C[i].f,ms/1000*.9); await sleep(ms); pads[i].classList.remove('lit'); }
   async function show(){
     busy=true; setPads(false); play.disabled=true; m.className='msg'; m.textContent='👀 Miren bien…';
     await sleep(500);
-    for(const i of seq){ if(tk.dead) return; await flash(i); await sleep(180); }
+    const speed=Math.max(260, 500-(seq.length-3)*45);
+    for(const i of seq){ if(tk.dead) return; await flash(i,speed); await sleep(140); }
     pos=0; busy=false; setPads(true); m.textContent='¡Ahora ustedes!';
   }
   pads.forEach((p,i)=>p.onclick=async()=>{
     if(busy) return;
-    flash(i,250);
+    flash(i,220);
     if(i!==seq[pos]){
       busy=true; setPads(false); fail(); m.className='msg bad'; m.textContent='¡Uy! Ese no era. Miren otra vez la secuencia.';
       play.disabled=false; play.textContent='▶ Ver de nuevo'; return;
@@ -301,65 +332,114 @@ function simon(el, done, tk){
       if(seq.length===GOAL){ m.className='msg ok'; m.textContent='¡Memoria de elefante! 🐘'; setTimeout(done,700); return; }
       m.className='msg ok'; m.textContent='¡Bien! Se agrega un color más…';
       seq.push(Math.floor(Math.random()*4)); el.querySelector('#ln').textContent=seq.length;
-      await sleep(1000); show();
+      await sleep(900); show();
     }
   });
   play.onclick=()=>{ play.textContent='▶ Mirar la secuencia'; show(); };
 }
 
-/* ================= 3. SUDOKU ================= */
+/* ================= 3. MASTERMIND ================= */
+function mastermind(el, done){
+  const COL=['🔴','🟠','🟡','🟢','🔵','🟣'];
+  const LEN=4, MAXT=10;
+  let code, rows, cur, over=false;
+  function reset(){ code=shuffle([0,1,2,3,4,5]).slice(0,LEN); rows=[]; cur=[]; over=false; draw(); }
+  function score(g){
+    let ok=0, near=0;
+    g.forEach((c,i)=>{ if(c===code[i]) ok++; });
+    const uniq=[...new Set(g)];
+    uniq.forEach(c=>{ if(code.includes(c)) near++; });
+    return {ok, near: near-ok};
+  }
+  function draw(msg='', cls=''){
+    const left=MAXT-rows.length;
+    el.innerHTML=`<div class="mm">
+      <div class="mmrows">
+        ${rows.map((r,k)=>`<div class="mmrow"><span class="mmn">${k+1}</span>${r.g.map(c=>`<span class="peg">${COL[c]}</span>`).join('')}
+          <span class="fb">${'✅'.repeat(r.s.ok)}${'🔁'.repeat(r.s.near)}${(r.s.ok+r.s.near)===0?'❌':''}</span></div>`).join('')}
+        ${!over?`<div class="mmrow cur"><span class="mmn">${rows.length+1}</span>${Array.from({length:LEN},(_,i)=>`<span class="peg ${cur[i]===undefined?'empty':''}">${cur[i]!==undefined?COL[cur[i]]:''}</span>`).join('')}<span class="fb" style="color:var(--muted);font-size:16px">${left} intentos</span></div>`:''}
+      </div>
+      <div class="mmside">
+        <div class="legend">✅ = color correcto <b>en su lugar</b><br>🔁 = color correcto pero <b>en otro lugar</b><br>❌ = ningún color está</div>
+        <div class="palette2">${COL.map((c,i)=>`<button class="pbtn" data-c="${i}" ${over?'disabled':''}>${c}</button>`).join('')}</div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn gray" id="del" ${over?'disabled':''}>⌫ Borrar</button>
+          <button class="btn green" id="try" ${cur.length<LEN||over?'disabled':''}>Probar ✔</button>
+        </div>
+      </div></div>
+      <div class="msg ${cls}" id="m">${msg}</div>`;
+    el.querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>{ if(cur.length<LEN){ cur.push(+b.dataset.c); click(); draw(); } });
+    el.querySelector('#del').onclick=()=>{ cur.pop(); draw(); };
+    el.querySelector('#try').onclick=()=>{
+      const s=score(cur); rows.push({g:cur,s}); cur=[];
+      if(s.ok===LEN){ over=true; draw('¡Descifraron el código! 🔓','ok'); beep(784,.15); setTimeout(done,1100); return; }
+      if(rows.length===MAXT){ over=true; fail(); draw(`Se acabaron los intentos. El código era ${code.map(c=>COL[c]).join('')}`,'bad');
+        el.querySelector('#m').insertAdjacentHTML('afterend','<div class="row" style="justify-content:center"><button class="btn orange" id="again">🎲 Nuevo código</button></div>');
+        el.querySelector('#again').onclick=reset; return; }
+      beep(500,.08,'triangle'); draw();
+    };
+  }
+  reset();
+}
+
+/* ================= 4. SUDOKU ================= */
 function sudoku(el, done){
-  const F=['','🍎','🍌','🍇','🍓'];
-  const SOL=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
-  const MASKS=[
-    [[1,0,0,1],[0,1,1,0],[0,1,1,0],[1,0,0,1]],
-    [[1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]],
+  const F=['','🍎','🍌','🍇','🍓','🍊','🥝'];
+  const R=[
+    {n:4,br:2,bc:2,size:80,sol:[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]],
+     mask:[[1,0,0,1],[0,0,1,0],[0,1,0,0],[1,0,0,1]]},
+    {n:6,br:2,bc:3,size:62,sol:[[1,2,3,4,5,6],[4,5,6,1,2,3],[2,3,1,5,6,4],[5,6,4,2,3,1],[3,1,2,6,4,5],[6,4,5,3,1,2]],
+     mask:[[1,0,0,1,1,0],[0,1,0,0,0,1],[0,0,1,0,1,0],[0,1,0,1,0,0],[1,0,0,0,1,0],[0,0,1,1,0,1]]},
   ];
-  let r=0, grid, given, locked=false;
+  let r=0, grid, given, sel=null, locked=false, P;
   function setup(){
-    // mezclamos las frutas para que cada ronda se vea distinta
-    const perm=shuffle([1,2,3,4]);
-    grid=SOL.map((row,i)=>row.map((v,j)=>MASKS[r][i][j]?perm[v-1]:0));
-    given=MASKS[r].map(row=>row.map(Boolean));
+    P=R[r]; sel=null;
+    const perm=shuffle([...Array(P.n)].map((_,i)=>i+1));
+    grid=P.sol.map((row,i)=>row.map((v,j)=>P.mask[i][j]?perm[v-1]:0));
+    given=P.mask.map(row=>row.map(Boolean));
   }
   function conflicts(){
-    const bad=new Set();
-    const groups=[];
-    for(let i=0;i<4;i++){ groups.push([0,1,2,3].map(j=>[i,j])); groups.push([0,1,2,3].map(j=>[j,i])); }
-    for(const bi of [0,2]) for(const bj of [0,2]) groups.push([[bi,bj],[bi,bj+1],[bi+1,bj],[bi+1,bj+1]]);
-    for(const g of groups){ const seen={}; for(const [i,j] of g){ const v=grid[i][j]; if(!v) continue; (seen[v]=seen[v]||[]).push(i*4+j); }
+    const n=P.n, bad=new Set(), groups=[];
+    for(let i=0;i<n;i++){ groups.push([...Array(n)].map((_,j)=>[i,j])); groups.push([...Array(n)].map((_,j)=>[j,i])); }
+    for(let bi=0;bi<n;bi+=P.br) for(let bj=0;bj<n;bj+=P.bc){ const g=[]; for(let a=0;a<P.br;a++) for(let b=0;b<P.bc;b++) g.push([bi+a,bj+b]); groups.push(g); }
+    for(const g of groups){ const seen={}; for(const [i,j] of g){ const v=grid[i][j]; if(!v) continue; (seen[v]=seen[v]||[]).push(i*n+j); }
       Object.values(seen).forEach(arr=>{ if(arr.length>1) arr.forEach(x=>bad.add(x)); }); }
     return bad;
   }
   function draw(){
-    const bad=conflicts();
-    el.innerHTML=`<p class="center" style="margin-top:0">Tablero ${r+1} de 2</p>
-      <div class="sudo">${grid.map((row,i)=>row.map((v,j)=>`<button class="sq ${given[i][j]?'given':''} ${bad.has(i*4+j)?'bad':''} ${j===1?'c1':''} ${i===1?'r1':''}" data-i="${i}" data-j="${j}">${F[v]}</button>`).join('')).join('')}</div>
-      <div class="palette">Orden al tocar: vacío → 🍎 → 🍌 → 🍇 → 🍓</div>
-      <div class="msg" id="m"></div>`;
+    const n=P.n, bad=conflicts();
+    el.innerHTML=`<p class="center" style="margin-top:0">Tablero ${r+1} de ${R.length} ${n===6?'· <b>¡6 frutas! Cuadrados de 2×3</b>':''}</p>
+      <div class="sudo" style="grid-template-columns:repeat(${n},${P.size}px);grid-template-rows:repeat(${n},${P.size}px)">${grid.map((row,i)=>row.map((v,j)=>{
+        const cls=['sq', given[i][j]?'given':'', bad.has(i*n+j)?'bad':'', sel&&sel[0]===i&&sel[1]===j?'sel':'',
+          ((j+1)%P.bc===0&&j<n-1)?'cr':'', ((i+1)%P.br===0&&i<n-1)?'rb':''].join(' ');
+        return `<button class="${cls}" style="font-size:${P.size*.52}px" data-i="${i}" data-j="${j}">${F[v]}</button>`;}).join('')).join('')}</div>
+      <div class="palette2" style="justify-content:center;margin-top:10px">${[...Array(n)].map((_,k)=>`<button class="pbtn" data-v="${k+1}">${F[k+1]}</button>`).join('')}<button class="pbtn" data-v="0">🧽</button></div>
+      <div class="msg" id="m">${sel?'':'Toquen un casillero vacío y después elijan la fruta.'}</div>`;
     el.querySelectorAll('.sq').forEach(b=>b.onclick=()=>{
       const i=+b.dataset.i, j=+b.dataset.j; if(locked||given[i][j]) return;
-      grid[i][j]=(grid[i][j]+1)%5; click(); draw();
+      sel=[i,j]; click(); draw();
     });
-    const full=grid.every(row=>row.every(v=>v));
-    const m=el.querySelector('#m');
+    el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{
+      if(locked||!sel) return; grid[sel[0]][sel[1]]=+b.dataset.v; click(); draw();
+    });
+    const full=grid.every(row=>row.every(v=>v)), m=el.querySelector('#m');
     if(full && bad.size===0){
       locked=true; m.className='msg ok'; m.textContent='¡Tablero perfecto! ✔'; beep(784,.15);
-      setTimeout(()=>{ r++; if(r===MASKS.length) return done(); locked=false; setup(); draw(); },1100);
+      setTimeout(()=>{ r++; if(r===R.length) return done(); locked=false; setup(); draw(); },1100);
     } else if(bad.size){ m.className='msg bad'; m.textContent='Hay frutas repetidas (en rojo).'; }
   }
   setup(); draw();
 }
 
-/* ================= 4. FÓSFOROS ================= */
+/* ================= 5. FÓSFOROS ================= */
 function fosforos(el, done, tk){
-  const N=15;
+  const N=20;
   let left, busy=false;
   function reset(){ left=N; busy=false; draw('Les toca a ustedes. ¿Cuántos sacan?'); }
-  function draw(text, cls=''){
+  function draw(text){
     el.innerHTML=`<div class="sticks">${Array.from({length:N},(_,i)=>`<div class="stick ${i>=left?'gone':''}"></div>`).join('')}</div>
       <p class="center">Quedan <b style="font-size:30px">${left}</b> fósforos</p>
-      <div class="turn ${cls}" id="t">${text}</div>
+      <div class="turn" id="t">${text}</div>
       <div class="row" style="justify-content:center;margin-top:12px">
         ${[1,2,3].map(k=>`<button class="btn purple" data-k="${k}" ${busy||k>left?'disabled':''}>Sacar ${k}</button>`).join('')}
       </div>`;
@@ -370,9 +450,9 @@ function fosforos(el, done, tk){
     left-=k;
     if(left===0){ draw('🔥 Se llevaron el último… ¡ganó la compu!'); fail(); return lose(); }
     draw('🤖 La compu está pensando…'); await sleep(1100); if(tk.dead) return;
-    // la compu juega bien solo algunas veces, para que se pueda ganar
-    let c = (left-1)%4;
-    if(c===0 || Math.random()<0.35) c = 1+Math.floor(Math.random()*Math.min(3,left));
+    // la compu ahora juega bien casi siempre: hay que descubrir la estrategia
+    let c=(left-1)%4;
+    if(c===0 || Math.random()<0.2) c=1+Math.floor(Math.random()*Math.min(3,left));
     left-=c; beep(300,.12,'triangle');
     if(left===0){ draw(`🤖 La compu sacó ${c} y se llevó el último. ¡GANARON! 🎉`); return setTimeout(done,1200); }
     busy=false; draw(`🤖 La compu sacó ${c}. Les toca a ustedes.`);
@@ -383,14 +463,56 @@ function fosforos(el, done, tk){
   reset();
 }
 
-/* ================= 5. ROMPECABEZAS DESLIZANTE ================= */
+/* ================= 6. EL PUENTE Y LA LINTERNA ================= */
+function puente(el, done){
+  const P=[{e:'👦',n:'Tomi',t:1},{e:'👧',n:'Sofi',t:2},{e:'👨',n:'Papá',t:5},{e:'👵',n:'Abuela',t:8}];
+  const LIMIT=15;
+  let side, lamp, time, sel, log, over;
+  function reset(){ side=[0,0,0,0]; lamp=0; time=0; sel=new Set(); log=[]; over=false; draw(); }
+  function person(i){
+    const can=!over && side[i]===lamp;
+    return `<button class="per ${sel.has(i)?'sel':''}" data-i="${i}" ${can?'':'disabled'}><span>${P[i].e}</span><b>${P[i].n}</b><small>${P[i].t} min</small></button>`;
+  }
+  function draw(msg='', cls=''){
+    el.innerHTML=`<div class="bridge">
+        <div class="bank"><div class="bt">Orilla de acá ${lamp===0?'🔦':''}</div>${P.map((_,i)=>side[i]===0?person(i):'').join('')}</div>
+        <div class="river">🌉<br><span>🌊🌊</span></div>
+        <div class="bank"><div class="bt">Orilla de allá ${lamp===1?'🔦':''}</div>${P.map((_,i)=>side[i]===1?person(i):'').join('')}</div>
+      </div>
+      <div class="timebar"><div style="width:${Math.min(100,time/LIMIT*100)}%;background:${time>LIMIT?'var(--red)':'var(--green)'}"></div></div>
+      <p class="center">🔋 Pila usada: <b>${time}</b> de ${LIMIT} minutos ${log.length?`<br><span style="color:var(--muted);font-size:17px">${log.join(' · ')}</span>`:''}</p>
+      <div class="row" style="justify-content:center">
+        <button class="btn green" id="go" ${over||sel.size<1?'disabled':''}>🔦 Cruzar ${lamp===0?'→':'←'}</button>
+        <button class="btn gray" id="rs">↺ Empezar de nuevo</button>
+      </div>
+      <div class="msg ${cls}" id="m">${msg}</div>`;
+    el.querySelectorAll('.per').forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i;
+      if(sel.has(i)) sel.delete(i); else if(sel.size<2) sel.add(i); else return;
+      click(); draw();
+    });
+    el.querySelector('#rs').onclick=reset;
+    el.querySelector('#go').onclick=()=>{
+      const who=[...sel], t=Math.max(...who.map(i=>P[i].t));
+      who.forEach(i=>side[i]=1-lamp); lamp=1-lamp; time+=t; sel=new Set();
+      log.push(`${who.map(i=>P[i].e).join('')} ${lamp===1?'→':'←'} ${t}'`);
+      beep(400,.1,'triangle');
+      if(time>LIMIT){ over=true; fail(); draw('🔦 ¡Se terminó la pila en medio del puente! Prueben otra estrategia.','bad'); return; }
+      if(side.every(s=>s===1)){ over=true; draw(`¡Todos cruzaron en ${time} minutos! 🎉`,'ok'); setTimeout(done,1100); return; }
+      draw();
+    };
+  }
+  reset();
+}
+
+/* ================= 7. ROMPECABEZAS DESLIZANTE ================= */
 function deslizante(el, done){
   const COL=['','#ff5a5f','#ff9f1c','#e9c400','#2ec47a','#14b8a6','#3a86ff','#8e5cf7','#d946ef'];
   let b, moves=0, locked=false;
   const nb=i=>[i-3,i+3,(i%3?i-1:-1),(i%3<2?i+1:-1)].filter(x=>x>=0&&x<9);
   function scramble(){
     b=[1,2,3,4,5,6,7,8,0]; let prev=-1;
-    for(let s=0;s<40;s++){ const e=b.indexOf(0); const opts=nb(e).filter(x=>x!==prev); const t=opts[Math.floor(Math.random()*opts.length)]; [b[e],b[t]]=[b[t],b[e]]; prev=e; }
+    for(let s=0;s<150;s++){ const e=b.indexOf(0); const opts=nb(e).filter(x=>x!==prev); const t=opts[Math.floor(Math.random()*opts.length)]; [b[e],b[t]]=[b[t],b[e]]; prev=e; }
     if(b.join()==='1,2,3,4,5,6,7,8,0') scramble();
     moves=0;
   }
@@ -410,14 +532,15 @@ function deslizante(el, done){
   scramble(); draw();
 }
 
-/* ================= 6. HANOI ================= */
+/* ================= 8. HANOI (4 discos) ================= */
 function hanoi(el, done){
-  const colors=['#ff5a5f','#ffd23f','#3a86ff'];
-  let T=[[3,2,1],[],[]], sel=null, moves=0, locked=false;
+  const colors=['#ff5a5f','#ffd23f','#2ec47a','#3a86ff'];
+  const ND=4, start=()=>[[...Array(ND)].map((_,i)=>ND-i),[],[]];
+  let T=start(), sel=null, moves=0, locked=false;
   function draw(){
-    el.innerHTML=`<div class="towers">${T.map((t,i)=>`<div class="tower ${sel===i?'sel':''}" data-i="${i}">${t.map((d,k)=>`<div class="disc ${sel===i&&k===t.length-1?'lift':''}" style="width:${50+d*45}px;background:${colors[d-1]}"></div>`).join('')}</div>`).join('')}</div>
+    el.innerHTML=`<div class="towers">${T.map((t,i)=>`<div class="tower ${sel===i?'sel':''}" data-i="${i}">${t.map((d,k)=>`<div class="disc ${sel===i&&k===t.length-1?'lift':''}" style="width:${40+d*38}px;background:${colors[d-1]}"></div>`).join('')}</div>`).join('')}</div>
       <div class="tlabel"><span>Torre A</span><span>Torre B</span><span>Torre C 🎯</span></div>
-      <p class="center">Movimientos: <b>${moves}</b> <span style="color:var(--muted)">(se puede en 7)</span></p>
+      <p class="center">Movimientos: <b>${moves}</b> <span style="color:var(--muted)">(se puede en 15)</span></p>
       <div class="row" style="justify-content:center"><button class="btn gray" id="rs">↺ Volver a empezar</button></div>
       <div class="msg" id="m"></div>`;
     el.querySelectorAll('.tower').forEach(t=>t.onclick=()=>{
@@ -426,10 +549,10 @@ function hanoi(el, done){
       if(sel===i){ sel=null; draw(); return; }
       const d=T[sel][T[sel].length-1], top=T[i][T[i].length-1];
       if(top!==undefined && top<d){ fail(); sel=null; draw(); const mm=el.querySelector('#m'); mm.className='msg bad'; mm.textContent='¡No se puede poner un disco grande sobre uno chico!'; return; }
-      T[i].push(T[sel].pop()); sel=null; moves++; beep(440+moves*20,.08,'triangle'); draw();
-      if(T[2].length===3){ locked=true; const mm=el.querySelector('#m'); mm.className='msg ok'; mm.textContent= moves===7?'¡Perfecto! En la mínima cantidad de movimientos 🤯':`¡Lo lograron en ${moves} movimientos! ✔`; setTimeout(done,1000); }
+      T[i].push(T[sel].pop()); sel=null; moves++; beep(440+moves*12,.08,'triangle'); draw();
+      if(T[2].length===ND){ locked=true; const mm=el.querySelector('#m'); mm.className='msg ok'; mm.textContent= moves===15?'¡Perfecto! En la mínima cantidad de movimientos 🤯':`¡Lo lograron en ${moves} movimientos! ✔`; setTimeout(done,1000); }
     });
-    el.querySelector('#rs').onclick=()=>{ if(locked) return; T=[[3,2,1],[],[]]; sel=null; moves=0; draw(); };
+    el.querySelector('#rs').onclick=()=>{ if(locked) return; T=start(); sel=null; moves=0; draw(); };
   }
   draw();
 }
