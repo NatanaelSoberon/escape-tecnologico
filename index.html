@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escape Tecnológico · 6.º grado</title>
+<title>Desafío de Genios · 6.º grado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0f1b3d; --bg2:#172a5c; --card:#ffffff; --ink:#1d2340; --muted:#6b7398;
+    --bg:#0f1b3d; --card:#ffffff; --ink:#1d2340; --muted:#6b7398;
     --yellow:#ffd23f; --green:#2ec47a; --red:#ff5a5f; --blue:#3a86ff; --purple:#8e5cf7; --orange:#ff9f1c;
   }
   *{box-sizing:border-box}
@@ -26,14 +26,15 @@
   h2{font-size:34px;margin:0;line-height:1.1}
   .tag{display:inline-block;background:var(--purple);color:#fff;border-radius:999px;padding:2px 14px;font-size:16px;font-weight:700;margin-bottom:6px}
   .lead{font-size:21px;color:var(--muted);margin:6px 0 16px}
-  .big{font-size:24px;margin:6px 0 14px}
+  .center{text-align:center;font-size:21px}
   .btn{border:none;border-radius:16px;padding:12px 22px;font-size:22px;font-weight:800;color:#fff;background:var(--blue);box-shadow:0 5px 0 rgba(0,0,0,.25);transition:transform .08s}
   .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
-  .btn.green{background:var(--green)} .btn.red{background:var(--red)} .btn.gray{background:#8c93b3} .btn.orange{background:var(--orange)} .btn.yellow{background:var(--yellow);color:var(--ink)}
+  .btn:disabled{opacity:.45;cursor:default}
+  .btn.green{background:var(--green)} .btn.red{background:var(--red)} .btn.gray{background:#8c93b3} .btn.orange{background:var(--orange)} .btn.yellow{background:var(--yellow);color:var(--ink)} .btn.purple{background:var(--purple)}
   .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .between{justify-content:space-between}
   .hint{margin-top:14px;background:#fff6d6;border:2px dashed var(--orange);border-radius:14px;padding:10px 14px;font-size:19px;display:none}
-  .msg{min-height:34px;font-size:22px;font-weight:700;margin-top:10px}
+  .msg{min-height:34px;font-size:22px;font-weight:700;margin-top:10px;text-align:center}
   .msg.ok{color:var(--green)} .msg.bad{color:var(--red)}
   .shake{animation:shake .4s}
   @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
@@ -46,50 +47,41 @@
   .mapa{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:24px auto;max-width:800px}
   .mapa div{background:rgba(255,255,255,.1);border-radius:14px;padding:8px 14px;font-size:18px}
 
-  /* binario */
-  .bulbs{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:10px 0}
-  .bulb{width:120px;border:3px solid #d8dcef;border-radius:20px;background:#f2f4fb;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
-  .bulb .ico{font-size:48px;filter:grayscale(1) opacity(.35);transition:.2s}
-  .bulb .val{font-size:30px;font-weight:800}
-  .bulb .bit{font-size:22px;color:var(--muted);font-weight:800}
-  .bulb.on{background:#fff4c2;border-color:var(--yellow);box-shadow:0 0 24px rgba(255,210,63,.7)}
-  .bulb.on .ico{filter:none}
-  .bulb.on .bit{color:var(--ink)}
-  .sum{text-align:center;font-size:26px}
-  .target{display:inline-block;background:var(--ink);color:var(--yellow);border-radius:12px;padding:0 14px;font-size:34px;font-weight:800}
+  /* memotest */
+  .memo{display:grid;grid-template-columns:repeat(4,96px);gap:12px;justify-content:center;margin:6px auto 12px}
+  .mc{width:96px;height:96px;border:none;border-radius:18px;font-size:50px;background:var(--purple);position:relative;transition:background .2s}
+  .mc span{visibility:hidden} .mc.flip span,.mc.done span{visibility:visible;display:inline-block;animation:pop .25s}
+  .mc::after{content:'?';position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.55);font-size:44px;font-weight:800}
+  .mc.flip{background:#f2f4fb}
+  .mc.flip::after,.mc.done::after{content:''}
+  .mc.done{background:#dff7ea;box-shadow:0 0 0 4px var(--green) inset}
 
-  /* robot */
-  .robotlay{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
-  .grid{display:grid;grid-template-columns:repeat(6,62px);grid-template-rows:repeat(6,62px);gap:4px;background:#d8dcef;padding:4px;border-radius:14px}
-  .cell{background:#f4f6ff;border-radius:8px;display:grid;place-items:center;font-size:36px}
-  .cell.wall{background:#5a6285}
-  .cell.path{background:#dff7ea}
-  .prog{min-height:70px;background:#f2f4fb;border-radius:14px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
-  .prog span{background:var(--blue);color:#fff;border-radius:10px;width:44px;height:44px;display:grid;place-items:center;font-size:26px;font-weight:800}
-  .prog span.run{background:var(--orange);transform:scale(1.15)}
-  .arrows{display:grid;grid-template-columns:repeat(3,70px);gap:6px}
-  .arrows .btn{padding:10px 0;font-size:30px}
+  /* simón */
+  .simon{display:grid;grid-template-columns:repeat(2,150px);gap:14px;justify-content:center;margin:10px auto}
+  .pad{width:150px;height:150px;border:none;border-radius:30px;opacity:.45;transition:opacity .1s,transform .1s}
+  .pad.lit{opacity:1;transform:scale(1.06);box-shadow:0 0 34px currentColor}
+  .pad:disabled{cursor:default}
 
-  /* secuencias */
-  .seq{font-size:44px;text-align:center;letter-spacing:4px;margin:16px 0;font-weight:800}
-  .opts{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-  .opts .btn{min-width:110px;font-size:32px;background:var(--purple)}
-  .dots{text-align:center;font-size:22px;margin-top:10px}
+  /* sudoku */
+  .sudo{display:grid;grid-template-columns:repeat(4,86px);grid-template-rows:repeat(4,86px);gap:0;justify-content:center;margin:10px auto;border:5px solid var(--ink);border-radius:14px;overflow:hidden;width:max-content}
+  .sq{border:1px solid #c9cde3;background:#fff;font-size:46px;display:grid;place-items:center;padding:0}
+  .sq.given{background:#eef0fa;cursor:default}
+  .sq.bad{background:#ffe1e2}
+  .sq.c1{border-right:4px solid var(--ink)} .sq.r1{border-bottom:4px solid var(--ink)}
+  .palette{display:flex;gap:10px;justify-content:center;margin-top:8px;font-size:18px;color:var(--muted)}
 
-  /* cesar */
-  .cipher{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0}
-  .cipher span{width:46px;height:56px;border-radius:10px;display:grid;place-items:center;font-size:30px;font-weight:800}
-  .cipher.enc span{background:var(--ink);color:#fff}
-  .cipher.dec span{background:#eef0fa;color:var(--ink)}
-  .cipher.dec.win span{background:var(--green);color:#fff}
-  .strip{font-family:monospace;font-size:19px;overflow-x:auto;background:#f2f4fb;border-radius:12px;padding:8px 10px;margin:12px 0;white-space:nowrap}
-  .wheel{display:flex;gap:16px;align-items:center;justify-content:center;margin:10px 0}
-  .wheel .n{font-size:40px;font-weight:800;min-width:70px;text-align:center}
+  /* fósforos */
+  .sticks{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px auto;min-height:120px;align-items:flex-end}
+  .stick{width:14px;height:100px;background:#e8c38a;border-radius:6px;position:relative;transition:.35s}
+  .stick::before{content:'';position:absolute;top:-10px;left:-4px;width:22px;height:24px;border-radius:50%;background:#e63946}
+  .stick.gone{opacity:.12;transform:translateY(20px) rotate(25deg)}
+  .turn{font-size:24px;font-weight:800;text-align:center}
 
-  /* luces */
-  .lights{display:grid;grid-template-columns:repeat(3,110px);gap:12px;justify-content:center;margin:12px auto}
-  .light{width:110px;height:110px;border-radius:22px;border:none;background:#2b3358;font-size:46px;transition:.15s}
-  .light.on{background:var(--yellow);box-shadow:0 0 30px rgba(255,210,63,.8)}
+  /* deslizante */
+  .slide{display:grid;grid-template-columns:repeat(3,104px);gap:8px;justify-content:center;margin:10px auto;background:#d8dcef;padding:8px;border-radius:18px;width:max-content}
+  .tile{width:104px;height:104px;border:none;border-radius:14px;font-size:48px;font-weight:800;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+  .tile.empty{background:transparent;box-shadow:none;cursor:default}
+  .tile.ok{outline:4px solid var(--green)}
 
   /* hanoi */
   .towers{display:flex;justify-content:space-around;align-items:flex-end;height:240px;margin:14px 0;gap:10px}
@@ -113,7 +105,7 @@
   .confetti{position:fixed;top:-40px;font-size:30px;pointer-events:none;animation:fall linear forwards;z-index:60}
   @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
   .foot{color:rgba(255,255,255,.55);text-align:center;font-size:15px;margin-top:18px}
-  @media(max-width:760px){.robotlay{grid-template-columns:1fr}.grid{grid-template-columns:repeat(6,48px);grid-template-rows:repeat(6,48px)}h1{font-size:38px}}
+  @media(max-width:760px){h1{font-size:38px}.memo{grid-template-columns:repeat(4,72px)}.mc{width:72px;height:72px;font-size:38px}}
 </style>
 </head>
 <body>
@@ -125,6 +117,8 @@ const LETTERS = 'GENIOS';
 const S = { team:'', level:0, start:0, hints:0, timer:null, got:[] };
 const $ = s => document.querySelector(s);
 const app = $('#app');
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 
 /* ---------- sonido ---------- */
 let AC;
@@ -146,14 +140,14 @@ function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60
 function intro(){
   app.innerHTML = `
   <div class="intro">
-    <div style="font-size:70px">🔐🤖💡</div>
-    <h1>Escape Tecnológico</h1>
-    <p>La computadora central del colegio quedó bloqueada. Para liberarla, su equipo tiene que superar <b>6 desafíos de ingenio</b>. Cada desafío les da una letra de la <b>contraseña maestra</b>.</p>
+    <div style="font-size:70px">🧠🎲🏆</div>
+    <h1>Desafío de Genios</h1>
+    <p>Para ganar el título de <b>Genios de 6.º</b>, su equipo tiene que superar <b>6 desafíos</b> de memoria, lógica e ingenio. Cada desafío les da una letra de la <b>palabra secreta</b>.</p>
     <input id="team" maxlength="28" placeholder="Nombre del equipo" autocomplete="off"><br>
-    <button class="btn yellow" id="go">¡Empezar la misión! 🚀</button>
+    <button class="btn yellow" id="go">¡Empezar el desafío! 🚀</button>
     <div class="mapa">
-      <div>1 · 💡 Código binario</div><div>2 · 🤖 Robot programador</div><div>3 · 🔢 Secuencias</div>
-      <div>4 · 🕵️ Mensaje secreto</div><div>5 · 🔌 Apagón del servidor</div><div>6 · 🗼 Torre de discos</div>
+      <div>1 · 🃏 Memotest</div><div>2 · 🔴 Simón dice</div><div>3 · 🍓 Sudoku de frutas</div>
+      <div>4 · 🔥 Fósforos</div><div>5 · 🧩 Rompecabezas</div><div>6 · 🗼 Torre de discos</div>
     </div>
     <p style="font-size:17px;opacity:.7">Cada pista que pidan suma 30 segundos al tiempo final. ¡Piensen en equipo antes de tocar!</p>
   </div>`;
@@ -163,18 +157,18 @@ function intro(){
   $('#team').focus();
 }
 
-/* ---------- marco de cada nivel ---------- */
+/* ---------- niveles ---------- */
 const LEVELS = [
-  {t:'Código binario', ico:'💡', lead:'Las computadoras guardan los números con lamparitas prendidas (1) y apagadas (0). Cada lamparita vale un número. Prendan las justas para que la suma dé el número pedido.',
-   hint:'Empiecen por la lamparita más grande que <b>no se pase</b> del número. Después sigan con las más chicas con lo que falta. Ej.: 11 = 8 + 2 + 1.', fn:binario},
-  {t:'Robot programador', ico:'🤖', lead:'Armen un programa con flechas para que el robot llegue a la batería 🔋 sin chocar contra las paredes. Cuando estén seguros, apreten ▶ Ejecutar.',
-   hint:'El robot primero tiene que ir hacia la derecha por arriba y bajar por el pasillo del medio. Desde la fila del medio, crucen todo a la derecha y bajen por el costado.', fn:robot},
-  {t:'Secuencias', ico:'🔢', lead:'Descubran la regla que sigue cada secuencia y elijan qué viene después. Tienen que acertar las 4.',
-   hint:'Pregúntense: ¿se suma siempre lo mismo? ¿se multiplica? ¿se suman los dos anteriores? ¿son números multiplicados por sí mismos?', fn:secuencias},
-  {t:'Mensaje secreto', ico:'🕵️', lead:'Un espía escondió palabras corriendo cada letra algunos lugares en el abecedario (como hacía Julio César). Giren la rueda hasta que el mensaje tenga sentido.',
-   hint:'La primera palabra está corrida 3 lugares. Fíjense en la tira del abecedario: la letra de arriba es la secreta y la de abajo es la verdadera.', fn:cesar},
-  {t:'Apagón del servidor', ico:'🔌', lead:'El servidor se recalentó. Apaguen TODAS las luces. Ojo: al tocar una luz, también cambian las de arriba, abajo, izquierda y derecha.',
-   hint:'Tocar dos veces la misma luz deja todo como estaba. Prueben tocar las luces del medio de cada lado o el centro, y miren qué pasa.', fn:luces},
+  {t:'Memotest', ico:'🃏', lead:'Den vuelta dos cartas por vez y encuentren las 8 parejas. ¡Usen la memoria de todo el equipo!',
+   hint:'Repártanse el tablero: cada integrante se encarga de recordar una parte (arriba, abajo, los costados). Antes de tocar, digan en voz alta dónde creen que está la pareja.', fn:memo},
+  {t:'Simón dice', ico:'🔴', lead:'Miren la secuencia de colores y repítanla en el mismo orden. Cada ronda se agrega un color más. ¡Lleguen a 6 colores!',
+   hint:'Digan los colores en voz alta mientras se encienden ("rojo, azul, azul…") y repitan la lista entre todos antes de tocar.', fn:simon},
+  {t:'Sudoku de frutas', ico:'🍓', lead:'Completen el tablero: en cada fila, en cada columna y en cada cuadrado de 2×2 tiene que haber las 4 frutas, sin repetir. Toquen un casillero vacío para cambiar la fruta.',
+   hint:'Busquen una fila, columna o cuadrado al que le falte UNA sola fruta: esa es fácil. Si una fruta aparece en rojo es porque está repetida.', fn:sudoku},
+  {t:'Fósforos', ico:'🔥', lead:'Hay 15 fósforos. Por turno, ustedes y la compu sacan 1, 2 o 3. El que se lleva el ÚLTIMO fósforo PIERDE. Ustedes empiezan. ¡Gánenle a la compu!',
+   hint:'Truco de genios: traten de dejarle a la compu 13, después 9, después 5 y al final 1 fósforo. Si la compu saca algunos, ustedes sacan lo que falte para completar 4 entre los dos.', fn:fosforos},
+  {t:'Rompecabezas deslizante', ico:'🧩', lead:'Ordenen los números del 1 al 8 deslizando las fichas hacia el lugar vacío. Toquen una ficha que esté al lado del hueco para moverla.',
+   hint:'Ordenen primero la fila de arriba (1, 2, 3) y no la toquen más. Después armen el resto. Las fichas que ya están en su lugar se marcan en verde.', fn:deslizante},
   {t:'Torre de discos', ico:'🗼', lead:'Pasen todos los discos a la torre C. Se mueve un disco por vez (el de arriba) y nunca un disco grande puede quedar arriba de uno más chico.',
    hint:'Con 3 discos se puede en 7 movimientos. Primer movimiento: el disco más chico va directo a la torre C.', fn:hanoi},
 ];
@@ -201,17 +195,20 @@ function level(){
   S.timer = setInterval(()=>{ const c=$('#clock'); if(c) c.textContent=fmt(elapsed()); },1000);
   let used=false;
   $('#hintbtn').onclick = ()=>{ if(!used){ used=true; S.hints++; $('#hint').style.display='block'; $('#hintbtn').classList.add('gray'); } };
-  L.fn($('#game'), passed);
+  S.lvlToken = {};
+  L.fn($('#game'), passed, S.lvlToken);
 }
 
 function passed(){
+  if($('#ov').classList.contains('show')) return;
+  S.lvlToken && (S.lvlToken.dead = true);
   win();
   S.got[S.level] = true;
   const letter = LETTERS[S.level];
   const last = S.level === LEVELS.length-1;
-  $('#ovc').innerHTML = `<h2>¡Desafío superado! 🎉</h2><p class="lead">Ganaron una letra de la contraseña:</p>
+  $('#ovc').innerHTML = `<h2>¡Desafío superado! 🎉</h2><p class="lead">Ganaron una letra de la palabra secreta:</p>
     <div class="bigletter">${letter}</div>
-    <button class="btn green" id="next">${last?'Abrir la computadora 🔓':'Siguiente desafío ➜'}</button>`;
+    <button class="btn green" id="next">${last?'Ver la palabra secreta 🏆':'Siguiente desafío ➜'}</button>`;
   $('#ov').classList.add('show');
   confetti(18);
   $('#next').onclick = ()=>{ $('#ov').classList.remove('show'); if(last) final(); else { S.level++; level(); } };
@@ -222,16 +219,16 @@ function final(){
   const t = elapsed();
   app.innerHTML = `
   <div class="intro final">
-    <div style="font-size:70px">🔓🏆</div>
-    <h1>¡Computadora liberada!</h1>
+    <div style="font-size:70px">🏆🧠</div>
+    <h1>¡Son unos genios!</h1>
     <div class="pwd">${[...LETTERS].map(c=>`<span>${c}</span>`).join('')}</div>
-    <p>La contraseña maestra es <b>GENIOS</b>… como el equipo <b>${esc(S.team)}</b>.</p>
+    <p>El equipo <b>${esc(S.team)}</b> superó los 6 desafíos.</p>
     <div class="card" style="max-width:460px;margin:0 auto 20px;color:var(--ink)">
       <div style="font-size:22px">Tiempo final</div>
       <div style="font-size:64px;font-weight:800;line-height:1">${fmt(t)}</div>
       <div style="font-size:18px;color:var(--muted)">${S.hints} pista${S.hints===1?'':'s'} usada${S.hints===1?'':'s'} (${S.hints*30} s de penalización)</div>
     </div>
-    <p style="font-size:20px">📸 ¡Llamen al profe para registrar su tiempo!</p>
+    <p style="font-size:20px">📸 ¡Llamen al profe para anotar su tiempo!</p>
     <button class="btn yellow" onclick="intro()">Jugar otra vez</button>
   </div>`;
   win(); setTimeout(win,400);
@@ -239,7 +236,7 @@ function final(){
 }
 
 function confetti(n){
-  const em=['🎉','⭐','💡','🤖','🔋','✨','🟡','🟣'];
+  const em=['🎉','⭐','🧠','🎲','🏆','✨','🟡','🟣'];
   for(let i=0;i<n;i++){ const s=document.createElement('div'); s.className='confetti';
     s.textContent=em[i%em.length]; s.style.left=Math.random()*100+'vw';
     s.style.animationDuration=(2+Math.random()*2.5)+'s'; s.style.animationDelay=(Math.random()*.8)+'s';
@@ -248,155 +245,169 @@ function confetti(n){
 function esc(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function shake(el){ el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
 
-/* ================= 1. BINARIO ================= */
-function binario(el, done){
-  const vals=[16,8,4,2,1], targets=[6,13,25];
-  let r=0, on=[0,0,0,0,0], locked=false;
-  el.innerHTML = `<p class="big" style="text-align:center">Formen el número <span class="target" id="tg"></span> <span style="color:var(--muted);font-size:20px">· ronda <span id="rd"></span> de 3</span></p>
-    <div class="bulbs">${vals.map((v,i)=>`<button class="bulb" data-i="${i}"><span class="ico">💡</span><span class="val">${v}</span><span class="bit">0</span></button>`).join('')}</div>
-    <p class="sum">Suma: <b id="sm">0</b> &nbsp;·&nbsp; En binario: <b id="bn">00000</b></p><div class="msg" id="m" style="text-align:center"></div>`;
-  const bulbs=[...el.querySelectorAll('.bulb')];
-  function upd(){
-    let sum=0; bulbs.forEach((b,i)=>{ b.classList.toggle('on',!!on[i]); b.querySelector('.bit').textContent=on[i]; if(on[i]) sum+=vals[i]; });
-    el.querySelector('#sm').textContent=sum; el.querySelector('#bn').textContent=on.join('');
-    el.querySelector('#tg').textContent=targets[r]; el.querySelector('#rd').textContent=r+1;
-    const m=el.querySelector('#m');
-    if(sum===targets[r]){ locked=true; m.className='msg ok'; m.textContent='¡Exacto! ✔'; beep(784,.15);
-      setTimeout(()=>{ r++; if(r===targets.length) return done(); on=[0,0,0,0,0]; locked=false; m.textContent=''; upd(); },900);
-    } else if(sum>targets[r]){ m.className='msg bad'; m.textContent='Uy, se pasaron. Apaguen alguna.'; }
-    else m.textContent='';
-  }
-  bulbs.forEach((b,i)=>b.onclick=()=>{ if(locked) return; on[i]=on[i]?0:1; click(); upd(); });
-  upd();
+/* ================= 1. MEMOTEST ================= */
+function memo(el, done){
+  const icons=['🚀','🦊','🎸','🍕','⚽','🌈','🐙','🦖'];
+  const deck=shuffle([...icons,...icons]);
+  let open=[], found=0, tries=0, lock=false;
+  el.innerHTML=`<div class="memo">${deck.map((c,i)=>`<button class="mc" data-i="${i}"><span>${c}</span></button>`).join('')}</div>
+    <p class="center">Intentos: <b id="tr">0</b> · Parejas encontradas: <b id="pf">0</b> de 8</p>`;
+  const cards=[...el.querySelectorAll('.mc')];
+  cards.forEach((c,i)=>c.onclick=()=>{
+    if(lock||c.classList.contains('flip')||c.classList.contains('done')) return;
+    c.classList.add('flip'); click(); open.push(i);
+    if(open.length<2) return;
+    tries++; el.querySelector('#tr').textContent=tries;
+    const [a,b]=open; open=[];
+    if(deck[a]===deck[b]){
+      cards[a].classList.add('done'); cards[b].classList.add('done'); found++; beep(784,.15);
+      el.querySelector('#pf').textContent=found;
+      if(found===icons.length) setTimeout(done,700);
+    } else {
+      lock=true;
+      setTimeout(()=>{ cards[a].classList.remove('flip'); cards[b].classList.remove('flip'); lock=false; },950);
+    }
+  });
 }
 
-/* ================= 2. ROBOT ================= */
-function robot(el, done){
-  const map=[
-    'R..#..',
-    '##.#.#',
-    '......',
-    '.####.',
-    '...#B.',
-    '##....'];
-  const MAX=12;
-  let prog=[], running=false;
-  const D={'↑':[-1,0],'↓':[1,0],'←':[0,-1],'→':[0,1]};
-  el.innerHTML=`<div class="robotlay">
-    <div class="grid" id="g"></div>
-    <div>
-      <div style="font-size:20px"><b>Programa</b> <span style="color:var(--muted)">(máximo ${MAX} pasos)</span></div>
-      <div class="prog" id="p"></div>
-      <div class="row" style="align-items:flex-start;gap:20px">
-        <div class="arrows">
-          <span></span><button class="btn" data-d="↑">↑</button><span></span>
-          <button class="btn" data-d="←">←</button><button class="btn" data-d="↓">↓</button><button class="btn" data-d="→">→</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="btn green" id="run">▶ Ejecutar</button>
-          <button class="btn gray" id="undo">⌫ Borrar último</button>
-          <button class="btn red" id="clr">✖ Borrar todo</button>
-        </div>
-      </div>
-      <div class="msg" id="m"></div>
-    </div></div>`;
-  const g=el.querySelector('#g'), p=el.querySelector('#p'), m=el.querySelector('#m');
-  function draw(pos, trail=[]){
-    g.innerHTML='';
-    map.forEach((row,r)=>[...row].forEach((c,k)=>{
-      const d=document.createElement('div'); d.className='cell'+(c==='#'?' wall':'');
-      if(trail.some(t=>t[0]===r&&t[1]===k)) d.classList.add('path');
-      if(c==='B') d.textContent='🔋';
-      if(pos[0]===r&&pos[1]===k) d.textContent='🤖';
-      g.appendChild(d);
-    }));
+/* ================= 2. SIMÓN DICE ================= */
+function simon(el, done, tk){
+  const C=[{c:'#ff5a5f',f:330,n:'rojo'},{c:'#3a86ff',f:392,n:'azul'},{c:'#2ec47a',f:262,n:'verde'},{c:'#ffd23f',f:523,n:'amarillo'}];
+  const GOAL=6;
+  let seq=[Math.floor(Math.random()*4), Math.floor(Math.random()*4)], pos=0, busy=true;
+  el.innerHTML=`<div class="simon">${C.map((p,i)=>`<button class="pad" data-i="${i}" style="background:${p.c};color:${p.c}" disabled></button>`).join('')}</div>
+    <p class="center">Colores en la secuencia: <b id="ln">2</b> de ${GOAL}</p>
+    <div class="row" style="justify-content:center"><button class="btn green" id="play">▶ Mirar la secuencia</button></div>
+    <div class="msg" id="m"></div>`;
+  const pads=[...el.querySelectorAll('.pad')], m=el.querySelector('#m'), play=el.querySelector('#play');
+  const setPads=on=>pads.forEach(p=>p.disabled=!on);
+  async function flash(i,ms=480){ pads[i].classList.add('lit'); beep(C[i].f,ms/1000*.9); await sleep(ms); pads[i].classList.remove('lit'); }
+  async function show(){
+    busy=true; setPads(false); play.disabled=true; m.className='msg'; m.textContent='👀 Miren bien…';
+    await sleep(500);
+    for(const i of seq){ if(tk.dead) return; await flash(i); await sleep(180); }
+    pos=0; busy=false; setPads(true); m.textContent='¡Ahora ustedes!';
   }
-  function drawProg(active=-1){ p.innerHTML = prog.length? prog.map((c,i)=>`<span class="${i===active?'run':''}">${c}</span>`).join('') : '<span style="background:none;color:var(--muted);width:auto;font-size:18px">Toquen las flechas para armar el programa…</span>'; }
-  el.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{ if(running) return; if(prog.length>=MAX){ m.className='msg bad'; m.textContent='¡Llegaron al máximo de pasos!'; return; } prog.push(b.dataset.d); click(); m.textContent=''; drawProg(); });
-  el.querySelector('#undo').onclick=()=>{ if(!running){ prog.pop(); drawProg(); } };
-  el.querySelector('#clr').onclick=()=>{ if(!running){ prog=[]; drawProg(); draw([0,0]); m.textContent=''; } };
-  el.querySelector('#run').onclick=()=>{
-    if(running||!prog.length) return; running=true; m.textContent='';
-    let pos=[0,0], i=0, trail=[[0,0]];
-    const step=()=>{
-      if(i>=prog.length){ running=false; m.className='msg bad'; m.textContent='El programa terminó y el robot no llegó. ¡Revisen y prueben otra vez!'; fail(); return; }
-      const [dr,dc]=D[prog[i]], nr=pos[0]+dr, nc=pos[1]+dc;
-      drawProg(i);
-      if(nr<0||nr>5||nc<0||nc>5||map[nr][nc]==='#'){ running=false; m.className='msg bad'; m.textContent=`💥 ¡Chocó en el paso ${i+1}! Corrijan el programa.`; fail(); shake(g); setTimeout(()=>draw([0,0]),900); return; }
-      pos=[nr,nc]; trail.push(pos); draw(pos,trail); beep(500+i*30,.06,'triangle');
-      if(map[nr][nc]==='B'){ running=false; m.className='msg ok'; m.textContent='🔋 ¡Batería cargada!'; setTimeout(done,700); return; }
-      i++; setTimeout(step,420);
-    };
-    step();
-  };
-  draw([0,0]); drawProg();
+  pads.forEach((p,i)=>p.onclick=async()=>{
+    if(busy) return;
+    flash(i,250);
+    if(i!==seq[pos]){
+      busy=true; setPads(false); fail(); m.className='msg bad'; m.textContent='¡Uy! Ese no era. Miren otra vez la secuencia.';
+      play.disabled=false; play.textContent='▶ Ver de nuevo'; return;
+    }
+    pos++;
+    if(pos===seq.length){
+      busy=true; setPads(false);
+      if(seq.length===GOAL){ m.className='msg ok'; m.textContent='¡Memoria de elefante! 🐘'; setTimeout(done,700); return; }
+      m.className='msg ok'; m.textContent='¡Bien! Se agrega un color más…';
+      seq.push(Math.floor(Math.random()*4)); el.querySelector('#ln').textContent=seq.length;
+      await sleep(1000); show();
+    }
+  });
+  play.onclick=()=>{ play.textContent='▶ Mirar la secuencia'; show(); };
 }
 
-/* ================= 3. SECUENCIAS ================= */
-function secuencias(el, done){
-  const Q=[
-    {s:'2 · 4 · 8 · 16 · ?', o:['18','24','32','20'], a:'32'},
-    {s:'🔴 🔵 🔵 🔴 🔵 🔵 🔴 ?', o:['🔴','🔵','🟢'], a:'🔵'},
-    {s:'1 · 1 · 2 · 3 · 5 · 8 · ?', o:['11','13','10','16'], a:'13'},
-    {s:'1 · 4 · 9 · 16 · ?', o:['20','25','24','32'], a:'25'},
+/* ================= 3. SUDOKU ================= */
+function sudoku(el, done){
+  const F=['','🍎','🍌','🍇','🍓'];
+  const SOL=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
+  const MASKS=[
+    [[1,0,0,1],[0,1,1,0],[0,1,1,0],[1,0,0,1]],
+    [[1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]],
   ];
-  let i=0;
-  function show(){
-    const q=Q[i];
-    el.innerHTML=`<div class="seq" id="sq">${q.s}</div>
-      <div class="opts">${q.o.map(o=>`<button class="btn">${o}</button>`).join('')}</div>
-      <div class="dots">${Q.map((_,k)=>k<i?'✅':k===i?'🔵':'⚪').join(' ')}</div>
-      <div class="msg" id="m" style="text-align:center"></div>`;
-    el.querySelectorAll('.opts .btn').forEach(b=>b.onclick=()=>{
-      if(b.textContent===q.a){ b.classList.add('green'); b.style.background='var(--green)'; beep(784,.15); setTimeout(()=>{ i++; i===Q.length?done():show(); },600); }
-      else { fail(); b.style.background='var(--red)'; shake(el.querySelector('#sq')); const m=el.querySelector('#m'); m.className='msg bad'; m.textContent='Esa no es. ¡Busquen la regla!'; }
-    });
+  let r=0, grid, given, locked=false;
+  function setup(){
+    // mezclamos las frutas para que cada ronda se vea distinta
+    const perm=shuffle([1,2,3,4]);
+    grid=SOL.map((row,i)=>row.map((v,j)=>MASKS[r][i][j]?perm[v-1]:0));
+    given=MASKS[r].map(row=>row.map(Boolean));
   }
-  show();
-}
-
-/* ================= 4. CÉSAR ================= */
-function cesar(el, done){
-  const AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const R=[{w:'COMPUTADORA',k:3},{w:'TECLADO',k:5}];
-  let r=0, k=0, locked=false;
-  const enc=(w,k)=>[...w].map(c=>AB[(AB.indexOf(c)+k)%26]).join('');
-  const dec=(w,k)=>[...w].map(c=>AB[(AB.indexOf(c)-k+26)%26]).join('');
-  function show(){
-    const secret=enc(R[r].w,R[r].k), plain=dec(secret,k);
-    el.innerHTML=`<p class="big" style="text-align:center">Mensaje interceptado ${r+1} de 2:</p>
-      <div class="cipher enc">${[...secret].map(c=>`<span>${c}</span>`).join('')}</div>
-      <div class="wheel"><button class="btn" id="mn">−</button><div><div style="font-size:16px;color:var(--muted);text-align:center">corrimiento</div><div class="n">${k}</div></div><button class="btn" id="pl">+</button></div>
-      <div class="cipher dec ${plain===R[r].w?'win':''}">${[...plain].map(c=>`<span>${c}</span>`).join('')}</div>
-      <div class="strip">Secreta:&nbsp;&nbsp;${[...AB].map(c=>c).join(' ')}<br>Verdadera:${[...AB].map(c=>AB[(AB.indexOf(c)-k+26)%26]).join(' ')}</div>
-      <div class="msg ok" id="m" style="text-align:center"></div>`;
-    el.querySelector('#mn').onclick=()=>{ if(locked) return; k=(k+25)%26; click(); show(); };
-    el.querySelector('#pl').onclick=()=>{ if(locked) return; k=(k+1)%26; click(); show(); };
-    if(plain===R[r].w){ locked=true; el.querySelector('#m').textContent=`¡Descifrado! La palabra es ${R[r].w} ✔`; beep(784,.15);
-      setTimeout(()=>{ r++; if(r===R.length) return done(); k=0; locked=false; show(); },1400); }
-  }
-  show();
-}
-
-/* ================= 5. LUCES ================= */
-function luces(el, done){
-  let st, start, moves=0, locked=false;
-  const press=(a,i)=>{ const r=Math.floor(i/3), c=i%3; [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dr,dc])=>{ const rr=r+dr, cc=c+dc; if(rr>=0&&rr<3&&cc>=0&&cc<3) a[rr*3+cc]^=1; }); };
-  function newPuzzle(){
-    do{ st=Array(9).fill(0); const picks=new Set(); while(picks.size<3) picks.add(Math.floor(Math.random()*9)); picks.forEach(i=>press(st,i)); }while(st.every(x=>!x));
-    start=[...st]; moves=0;
+  function conflicts(){
+    const bad=new Set();
+    const groups=[];
+    for(let i=0;i<4;i++){ groups.push([0,1,2,3].map(j=>[i,j])); groups.push([0,1,2,3].map(j=>[j,i])); }
+    for(const bi of [0,2]) for(const bj of [0,2]) groups.push([[bi,bj],[bi,bj+1],[bi+1,bj],[bi+1,bj+1]]);
+    for(const g of groups){ const seen={}; for(const [i,j] of g){ const v=grid[i][j]; if(!v) continue; (seen[v]=seen[v]||[]).push(i*4+j); }
+      Object.values(seen).forEach(arr=>{ if(arr.length>1) arr.forEach(x=>bad.add(x)); }); }
+    return bad;
   }
   function draw(){
-    el.innerHTML=`<div class="lights">${st.map((v,i)=>`<button class="light ${v?'on':''}" data-i="${i}">${v?'💡':''}</button>`).join('')}</div>
-      <p style="text-align:center;font-size:21px">Movimientos: <b>${moves}</b> · Luces prendidas: <b>${st.filter(x=>x).length}</b></p>
-      <div class="row" style="justify-content:center"><button class="btn gray" id="rs">↺ Volver a empezar</button><button class="btn purple" style="background:var(--purple)" id="nw">🎲 Otro tablero</button></div>
-      <div class="msg ok" id="m" style="text-align:center"></div>`;
-    el.querySelectorAll('.light').forEach(b=>b.onclick=()=>{ if(locked) return; press(st,+b.dataset.i); moves++; click(); draw(); });
-    el.querySelector('#rs').onclick=()=>{ if(locked) return; st=[...start]; moves=0; draw(); };
-    el.querySelector('#nw').onclick=()=>{ if(locked) return; newPuzzle(); draw(); };
-    if(st.every(x=>!x)){ locked=true; el.querySelector('#m').textContent='¡Servidor apagado y a salvo! ✔'; setTimeout(done,800); }
+    const bad=conflicts();
+    el.innerHTML=`<p class="center" style="margin-top:0">Tablero ${r+1} de 2</p>
+      <div class="sudo">${grid.map((row,i)=>row.map((v,j)=>`<button class="sq ${given[i][j]?'given':''} ${bad.has(i*4+j)?'bad':''} ${j===1?'c1':''} ${i===1?'r1':''}" data-i="${i}" data-j="${j}">${F[v]}</button>`).join('')).join('')}</div>
+      <div class="palette">Orden al tocar: vacío → 🍎 → 🍌 → 🍇 → 🍓</div>
+      <div class="msg" id="m"></div>`;
+    el.querySelectorAll('.sq').forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i, j=+b.dataset.j; if(locked||given[i][j]) return;
+      grid[i][j]=(grid[i][j]+1)%5; click(); draw();
+    });
+    const full=grid.every(row=>row.every(v=>v));
+    const m=el.querySelector('#m');
+    if(full && bad.size===0){
+      locked=true; m.className='msg ok'; m.textContent='¡Tablero perfecto! ✔'; beep(784,.15);
+      setTimeout(()=>{ r++; if(r===MASKS.length) return done(); locked=false; setup(); draw(); },1100);
+    } else if(bad.size){ m.className='msg bad'; m.textContent='Hay frutas repetidas (en rojo).'; }
   }
-  newPuzzle(); draw();
+  setup(); draw();
+}
+
+/* ================= 4. FÓSFOROS ================= */
+function fosforos(el, done, tk){
+  const N=15;
+  let left, busy=false;
+  function reset(){ left=N; busy=false; draw('Les toca a ustedes. ¿Cuántos sacan?'); }
+  function draw(text, cls=''){
+    el.innerHTML=`<div class="sticks">${Array.from({length:N},(_,i)=>`<div class="stick ${i>=left?'gone':''}"></div>`).join('')}</div>
+      <p class="center">Quedan <b style="font-size:30px">${left}</b> fósforos</p>
+      <div class="turn ${cls}" id="t">${text}</div>
+      <div class="row" style="justify-content:center;margin-top:12px">
+        ${[1,2,3].map(k=>`<button class="btn purple" data-k="${k}" ${busy||k>left?'disabled':''}>Sacar ${k}</button>`).join('')}
+      </div>`;
+    el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>take(+b.dataset.k));
+  }
+  async function take(k){
+    if(busy) return; busy=true; click();
+    left-=k;
+    if(left===0){ draw('🔥 Se llevaron el último… ¡ganó la compu!'); fail(); return lose(); }
+    draw('🤖 La compu está pensando…'); await sleep(1100); if(tk.dead) return;
+    // la compu juega bien solo algunas veces, para que se pueda ganar
+    let c = (left-1)%4;
+    if(c===0 || Math.random()<0.35) c = 1+Math.floor(Math.random()*Math.min(3,left));
+    left-=c; beep(300,.12,'triangle');
+    if(left===0){ draw(`🤖 La compu sacó ${c} y se llevó el último. ¡GANARON! 🎉`); return setTimeout(done,1200); }
+    busy=false; draw(`🤖 La compu sacó ${c}. Les toca a ustedes.`);
+  }
+  function lose(){
+    setTimeout(()=>{ if(tk.dead) return; el.querySelector('#t').insertAdjacentHTML('afterend','<div class="row" style="justify-content:center;margin-top:12px"><button class="btn orange" id="rev">↺ ¡Revancha!</button></div>'); el.querySelectorAll('[data-k]').forEach(b=>b.disabled=true); el.querySelector('#rev').onclick=reset; },400);
+  }
+  reset();
+}
+
+/* ================= 5. ROMPECABEZAS DESLIZANTE ================= */
+function deslizante(el, done){
+  const COL=['','#ff5a5f','#ff9f1c','#e9c400','#2ec47a','#14b8a6','#3a86ff','#8e5cf7','#d946ef'];
+  let b, moves=0, locked=false;
+  const nb=i=>[i-3,i+3,(i%3?i-1:-1),(i%3<2?i+1:-1)].filter(x=>x>=0&&x<9);
+  function scramble(){
+    b=[1,2,3,4,5,6,7,8,0]; let prev=-1;
+    for(let s=0;s<40;s++){ const e=b.indexOf(0); const opts=nb(e).filter(x=>x!==prev); const t=opts[Math.floor(Math.random()*opts.length)]; [b[e],b[t]]=[b[t],b[e]]; prev=e; }
+    if(b.join()==='1,2,3,4,5,6,7,8,0') scramble();
+    moves=0;
+  }
+  function draw(){
+    el.innerHTML=`<div class="slide">${b.map((v,i)=>v?`<button class="tile ${v===i+1?'ok':''}" data-i="${i}" style="background:${COL[v]}">${v}</button>`:`<button class="tile empty"></button>`).join('')}</div>
+      <p class="center">Movimientos: <b>${moves}</b></p>
+      <div class="row" style="justify-content:center"><button class="btn gray" id="nw">🎲 Mezclar de nuevo</button></div>
+      <div class="msg ok" id="m"></div>`;
+    el.querySelectorAll('.tile[data-i]').forEach(t=>t.onclick=()=>{
+      if(locked) return; const i=+t.dataset.i, e=b.indexOf(0);
+      if(!nb(e).includes(i)){ shake(t); return; }
+      [b[e],b[i]]=[b[i],b[e]]; moves++; click(); draw();
+    });
+    el.querySelector('#nw').onclick=()=>{ if(!locked){ scramble(); draw(); } };
+    if(b.join()==='1,2,3,4,5,6,7,8,0'){ locked=true; el.querySelector('#m').textContent='¡Rompecabezas armado! ✔'; setTimeout(done,900); }
+  }
+  scramble(); draw();
 }
 
 /* ================= 6. HANOI ================= */
@@ -406,11 +417,11 @@ function hanoi(el, done){
   function draw(){
     el.innerHTML=`<div class="towers">${T.map((t,i)=>`<div class="tower ${sel===i?'sel':''}" data-i="${i}">${t.map((d,k)=>`<div class="disc ${sel===i&&k===t.length-1?'lift':''}" style="width:${50+d*45}px;background:${colors[d-1]}"></div>`).join('')}</div>`).join('')}</div>
       <div class="tlabel"><span>Torre A</span><span>Torre B</span><span>Torre C 🎯</span></div>
-      <p style="text-align:center;font-size:21px">Movimientos: <b>${moves}</b> <span style="color:var(--muted)">(se puede en 7)</span></p>
+      <p class="center">Movimientos: <b>${moves}</b> <span style="color:var(--muted)">(se puede en 7)</span></p>
       <div class="row" style="justify-content:center"><button class="btn gray" id="rs">↺ Volver a empezar</button></div>
-      <div class="msg" id="m" style="text-align:center"></div>`;
+      <div class="msg" id="m"></div>`;
     el.querySelectorAll('.tower').forEach(t=>t.onclick=()=>{
-      if(locked) return; const i=+t.dataset.i, m=el.querySelector('#m');
+      if(locked) return; const i=+t.dataset.i;
       if(sel===null){ if(T[i].length){ sel=i; click(); draw(); } return; }
       if(sel===i){ sel=null; draw(); return; }
       const d=T[sel][T[sel].length-1], top=T[i][T[i].length-1];
@@ -424,7 +435,7 @@ function hanoi(el, done){
 }
 
 /* atajo docente */
-document.addEventListener('keydown', e=>{ if(e.shiftKey && e.key.toLowerCase()==='n' && S.start && !$('#ov').classList.contains('show') && app.querySelector('#game')) passed(); });
+document.addEventListener('keydown', e=>{ if(e.shiftKey && e.key.toLowerCase()==='n' && S.start && app.querySelector('#game')) passed(); });
 
 intro();
 </script>
